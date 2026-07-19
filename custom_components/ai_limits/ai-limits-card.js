@@ -78,7 +78,9 @@ class AILimitsCard extends HTMLElement {
               state: stateObj.state,
               status: attrs.status || "unknown",
               remaining: attrs.remaining_percent,
-              utilization: attrs.utilization_percent
+              utilization: attrs.utilization_percent,
+              resetsIn: attrs.resets_in_seconds,
+              metricKey: metric
             });
           }
         }
@@ -123,10 +125,20 @@ class AILimitsCard extends HTMLElement {
         }
         .limit-item {
           display: flex;
+          flex-direction: column;
+          margin: 8px 0;
+          font-size: 14px;
+        }
+        .limit-label {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+        }
+        .limit-name {
+          display: flex;
           align-items: center;
           gap: 8px;
-          margin: 4px 0;
-          font-size: 14px;
         }
         .status-dot {
           display: inline-block;
@@ -140,8 +152,39 @@ class AILimitsCard extends HTMLElement {
         .status-exhausted {
           background-color: var(--error-color, #e74c3c);
         }
-        .status-unknown {
-          background-color: var(--warning-color, #f1c40f);
+        .progress-bar-container {
+          width: 100%;
+          background-color: var(--secondary-background-color, #e0e0e0);
+          border-radius: 4px;
+          height: 6px;
+          overflow: hidden;
+          margin-top: 4px;
+        }
+        .progress-bar {
+          height: 100%;
+          border-radius: 4px;
+          transition: width 0.3s ease;
+        }
+        .progress-bar.green {
+          background-color: var(--success-color, #2ecc71);
+        }
+        .progress-bar.striped {
+          background-image: linear-gradient(
+            45deg,
+            #e74c3c 25%,
+            #7f8c8d 25%,
+            #7f8c8d 50%,
+            #e74c3c 50%,
+            #e74c3c 75%,
+            #7f8c8d 75%,
+            #7f8c8d
+          );
+          background-size: 20px 20px;
+          animation: stripes 1.5s linear infinite;
+        }
+        @keyframes stripes {
+          from { background-position: 0 0; }
+          to { background-position: 20px 0; }
         }
       </style>
       <ha-card>
@@ -164,21 +207,53 @@ class AILimitsCard extends HTMLElement {
               <span><strong>${group.provider} (${group.account})</strong></span>
               <span class="credits">${creditsStr}</span>
             </div>
-            <ul class="limit-list">
+            <div class="limit-list">
         `;
 
         group.limits.forEach((limit) => {
-          const dotClass = limit.status === "exhausted" ? "status-exhausted" : "status-within_limit";
+          const isExhausted = limit.status === "exhausted";
+          const dotClass = isExhausted ? "status-exhausted" : "status-within_limit";
+          
+          let barWidth = 100;
+          let barClass = "green";
+
+          if (isExhausted) {
+            barClass = "striped";
+            // Guess total seconds to compute progress towards reset
+            let totalSecs = 0;
+            if (limit.metricKey.includes("5_hour") || limit.metricKey.includes("5h")) {
+              totalSecs = 5 * 3600;
+            } else if (limit.metricKey.includes("7_day") || limit.metricKey.includes("7d") || limit.metricKey.includes("weekly_fable")) {
+              totalSecs = 7 * 24 * 3600;
+            } else {
+              totalSecs = 5 * 3600; // Default Google AI Antigravity window
+            }
+
+            if (limit.resetsIn && totalSecs) {
+              barWidth = Math.max(0, Math.min(100, 100 * (1 - limit.resetsIn / totalSecs)));
+            }
+          } else {
+            barWidth = limit.remaining !== undefined ? limit.remaining : 100;
+          }
+
           html += `
-            <li class="limit-item">
-              <span class="status-dot ${dotClass}"></span>
-              <span><strong>${limit.cleanName}</strong>: ${limit.state}</span>
-            </li>
+            <div class="limit-item">
+              <div class="limit-label">
+                <div class="limit-name">
+                  <span class="status-dot ${dotClass}"></span>
+                  <span><strong>${limit.cleanName}</strong></span>
+                </div>
+                <span>${limit.state}</span>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-bar ${barClass}" style="width: ${barWidth}%"></div>
+              </div>
+            </div>
           `;
         });
 
         html += `
-            </ul>
+            </div>
           </div>
         `;
       });
