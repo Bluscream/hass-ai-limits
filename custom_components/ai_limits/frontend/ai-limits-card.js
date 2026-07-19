@@ -96,6 +96,10 @@ class AILimitsCard extends HTMLElement {
       }
     });
 
+    const okColor = this._config.ok_color || "var(--success-color, #2ecc71)";
+    const exhaustedColor = this._config.exhausted_color || "var(--error-color, #e74c3c)";
+    const exhaustedBgColor = this._config.exhausted_bg_color || "var(--secondary-text-color, #7f8c8d)";
+
     // 2. Render Card HTML
     let html = `
       <style>
@@ -156,10 +160,10 @@ class AILimitsCard extends HTMLElement {
           border-radius: 50%;
         }
         .status-within_limit {
-          background-color: var(--success-color, #2ecc71);
+          background-color: ${okColor};
         }
         .status-exhausted {
-          background-color: var(--error-color, #e74c3c);
+          background-color: ${exhaustedColor};
         }
         .progress-bar-container {
           width: 100%;
@@ -175,18 +179,18 @@ class AILimitsCard extends HTMLElement {
           transition: width 0.3s ease;
         }
         .progress-bar.green {
-          background-color: var(--success-color, #2ecc71);
+          background-color: ${okColor};
         }
         .progress-bar.striped {
           background-image: linear-gradient(
             45deg,
-            #e74c3c 25%,
-            #7f8c8d 25%,
-            #7f8c8d 50%,
-            #e74c3c 50%,
-            #e74c3c 75%,
-            #7f8c8d 75%,
-            #7f8c8d
+            ${exhaustedColor} 25%,
+            ${exhaustedBgColor} 25%,
+            ${exhaustedBgColor} 50%,
+            ${exhaustedColor} 50%,
+            ${exhaustedColor} 75%,
+            ${exhaustedBgColor} 75%,
+            ${exhaustedBgColor}
           );
           background-size: 20px 20px;
           animation: stripes 1.5s linear infinite;
@@ -201,6 +205,7 @@ class AILimitsCard extends HTMLElement {
           const showHeader = this._config.show_header !== false;
           const title = this._config.title !== undefined ? this._config.title : "AI Limits";
           const icon = this._config.icon !== undefined ? this._config.icon : "mdi:gauge";
+          // If title and icon are both empty or evaluated to falsy, do not render header
           if (showHeader && (title || icon)) {
             return `
               <div class="title">
