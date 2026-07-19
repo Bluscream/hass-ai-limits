@@ -5,12 +5,134 @@
         "title": "Add an AI account",
         "description": "Pick which account to track. Add the integration again for more.",
         "menu_options": {
-          "claude_web": "Claude subscription (web session cookie)",
+          "claude_web": "Claude Subscription (Anthropic)",
+          "claude_api": "Claude API Token (Anthropic)",
+          "google_one": "Google One Subscription (Google)",
+          "gemini_api": "Gemini API Token (Google)",
+          "devin": "Devin (formerly Windsurf)",
+          "chatgpt_sub": "ChatGPT Subscription (OpenAI)",
+          "chatgpt_api": "ChatGPT API Token (OpenAI)",
           "antigravity": "Google AI - Code Assist: Gemini, Claude & GPT (OAuth)"
         }
       },
+      "select_saved_login": {
+        "title": "Select a saved login",
+        "description": "Choose an existing saved login to reuse, or select to log in with new credentials.",
+        "data": {
+          "saved_login": "Saved login"
+        }
+      },
+      "reused_name": {
+        "title": "Name your account",
+        "description": "Enter a name for this new instance of the provider (reusing your saved credentials).",
+        "data": {
+          "account_name": "Account name"
+        }
+      },
+      "devin": {
+        "title": "Add a Devin account",
+        "menu_options": {
+          "devin_google_oauth": "Log in via Google",
+          "devin_github_oauth": "Log in via GitHub",
+          "devin_token": "Log in via Direct Bearer Token"
+        }
+      },
+      "devin_token": {
+        "title": "Devin Direct Token",
+        "description": "Reads Devin quota usage and billing status.\n\nOpen Devin in your browser or app, open DevTools → Network, click any request to `app.devin.ai/api`, and copy the Bearer token (starting with `auth1_`) from the `Authorization` header and the Organization ID from the `x-cog-org-id` header.",
+        "data": {
+          "account_name": "Account name",
+          "devin_token": "Bearer token (starts with auth1_)",
+          "devin_org": "Organization ID (e.g. org-dfbd58...)"
+        }
+      },
+      "devin_github_oauth": {
+        "title": "Devin GitHub Login",
+        "description": "Log in to Devin using GitHub OAuth.\n\n1. [Authorize Devin via GitHub]({auth_url})\n2. After authorizing, paste the callback code or URL below.",
+        "data": {
+          "account_name": "Account name",
+          "authorization_code": "Authorization code or callback URL"
+        }
+      },
+      "devin_google_oauth": {
+        "title": "Devin Google Login",
+        "description": "Log in to Devin using Google OAuth.\n\n1. [Authorize Devin via Google]({auth_url})\n2. After authorizing, paste the callback code or URL below.",
+        "data": {
+          "account_name": "Account name",
+          "authorization_code": "Authorization code or callback URL"
+        }
+      },
+      "claude_api": {
+        "title": "Add a Claude API Account",
+        "description": "Monitor Anthropic Developer API usage.\n\nEnter your account name and API key below.",
+        "data": {
+          "account_name": "Account name",
+          "api_key": "API Key"
+        }
+      },
+
+      "gemini_api": {
+        "title": "Gemini API Token",
+        "description": "Monitor Google AI Studio Gemini API usage.\n\nEnter your account name and API key below.",
+        "data": {
+          "account_name": "Account name",
+          "api_key": "API Key"
+        }
+      },
+      "chatgpt_sub": {
+        "title": "ChatGPT Subscription",
+        "description": "Monitor OpenAI ChatGPT Plus subscription limits (Stub).",
+        "data": {
+          "account_name": "Account name"
+        }
+      },
+      "chatgpt_api": {
+        "title": "ChatGPT API Token",
+        "description": "Monitor OpenAI Platform API token usage.\n\nEnter your account name and API key below.",
+        "data": {
+          "account_name": "Account name",
+          "api_key": "API Key"
+        }
+      },
+      "copilot_sub": {
+        "title": "Copilot Subscription",
+        "description": "Monitor Copilot Subscription limits (Stub).",
+        "data": {
+          "account_name": "Account name"
+        }
+      },
+      "github_copilot": {
+        "title": "GitHub Copilot",
+        "description": "Monitor GitHub Copilot limits (Stub).",
+        "data": {
+          "account_name": "Account name"
+        }
+      },
+      "deepseek_api": {
+        "title": "DeepSeek API Token",
+        "description": "Monitor DeepSeek API usage.\n\nEnter your account name and API key below.",
+        "data": {
+          "account_name": "Account name",
+          "api_key": "API Key"
+        }
+      },
+      "openrouter_api": {
+        "title": "OpenRouter API Token",
+        "description": "Monitor OpenRouter API usage.\n\nEnter your account name and API key below.",
+        "data": {
+          "account_name": "Account name",
+          "api_key": "API Key"
+        }
+      },
+      "perplexity_sub": {
+        "title": "Perplexity Subscription",
+        "description": "Monitor Perplexity Subscription limits (Stub).",
+        "data": {
+          "account_name": "Account name"
+        }
+      },
       "antigravity": {
-        "title": "Connect Antigravity (Google AI Pro)",
+        "title": "Google One Subscription (Google)",
         "description": "Mirrors Antigravity's Settings → Models view: the Gemini and Claude & GPT quota groups plus your AI Credits.\n\n**Step 1.** Open this URL and sign in with the same Google account you use in Antigravity:\n\n{auth_url}\n\n**Step 2.** Click Allow. Your browser will then try to open an address starting with `http://localhost:8765/...` and show an error like \"This site can't be reached\". **That is expected — do not close it.**\n\n**Step 3.** Copy the **entire address** from your browser's address bar (it contains `?code=...`) and paste it into the field below. You can paste the whole URL — the code is pulled out automatically.\n\nUnofficial: uses Antigravity's own OAuth client and a private Google API.",
         "data": {
           "account_name": "Account name",

@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from ..models import LimitsData
+from ...models import LimitsData
 
 
 class AuthError(Exception):
@@ -32,6 +33,8 @@ class AIProvider(ABC):
     # Whether to offer this provider in the add-integration menu. Deprecated
     # providers stay registered (so existing entries load) but hidden.
     menu_visible: bool = True
+    window_labels: dict[str, str] = {}
+    supported_auth: dict[str, dict[str, Any]] = {}
 
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
         self.hass = hass

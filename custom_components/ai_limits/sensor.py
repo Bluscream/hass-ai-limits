@@ -29,10 +29,10 @@ from .const import (
     STATUS_RATE_LIMITED,
     STATUS_UNKNOWN,
     WINDOW_KEYS,
-    WINDOW_LABELS,
 )
 from .entity import AILimitsEntity
 from .models import LimitsData, WindowData
+from .providers import REGISTRY
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -188,7 +188,10 @@ async def async_setup_entry(
         win = windows.get(key)
         if win is not None and win.label:
             return win.label
-        return WINDOW_LABELS.get(key, key)
+        cls = REGISTRY.get(coordinator.provider_id)
+        if cls and hasattr(cls, "window_labels"):
+            return cls.window_labels.get(key, key)
+        return key
 
     descriptions = _base_descriptions()
     descriptions += [_window_description(key, _label(key)) for key in window_keys]

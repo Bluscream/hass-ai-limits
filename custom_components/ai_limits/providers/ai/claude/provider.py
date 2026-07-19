@@ -17,17 +17,6 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.util import dt as dt_util
 
 from ...const import (
-    CONF_COOKIE,
-    CONF_DELETE_AFTER,
-    CONF_ENABLE_PROBE,
-    CONF_ORG_UUID,
-    CONF_PROBE_MODEL,
-    CONF_USER_AGENT,
-    DEFAULT_DELETE_AFTER,
-    DEFAULT_ENABLE_PROBE,
-    DEFAULT_PROBE_MODEL,
-    DEFAULT_USER_AGENT,
-    PROVIDER_CLAUDE_WEB,
     STATUS_ERROR,
     STATUS_OK,
     STATUS_RATE_LIMITED,
@@ -37,7 +26,21 @@ from ..base import AIProvider, AuthError, CannotConnect
 from .models import ClaudeOrganization, CompletionRequest, MessageLimit, UsageReport
 
 _LOGGER = logging.getLogger(__name__)
+
 BASE_URL = "https://claude.ai"
+CONF_COOKIE = "cookie"
+CONF_USER_AGENT = "user_agent"
+CONF_ORG_UUID = "org_uuid"
+CONF_ENABLE_PROBE = "enable_probe"
+CONF_PROBE_MODEL = "probe_model"
+CONF_DELETE_AFTER = "delete_after"
+DEFAULT_ENABLE_PROBE = False
+DEFAULT_DELETE_AFTER = True
+DEFAULT_PROBE_MODEL = "claude-fable-5"
+DEFAULT_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+)
 
 
 def _find_dict(obj, key: str):
@@ -69,9 +72,20 @@ def _trim_raw(obj, depth: int = 0):
 
 
 class ClaudeWebProvider(AIProvider):
-    provider_id = PROVIDER_CLAUDE_WEB
+    provider_id = "claude_web"
     label = "Claude subscription (web session)"
     manufacturer = "Anthropic (claude.ai)"
+    supported_auth = {"cookie": {"type": "cookie"}}
+    window_labels = {
+        "5h": "5-hour",
+        "7d": "7-day",
+        "7d_opus": "7-day Opus",
+        "7d_sonnet": "7-day Sonnet",
+        "7d_oi": "7-day OI",
+        "7d_cowork": "7-day Cowork",
+        "7d_oauth_apps": "7-day OAuth apps",
+        "7d_omelette": "7-day Omelette",
+    }
 
     def __init__(self, hass, entry) -> None:
         super().__init__(hass, entry)
