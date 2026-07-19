@@ -1,22 +1,19 @@
-type: markdown
-title: "🤖 AI Subscription Limits"
-content: >-
-  - **Claude Subscription (bluscreamlp)**
-    {%- set s_5h = 'sensor.claude_subscription_bluscreamlp_5_hour' %}
-    {%- set s_7d = 'sensor.claude_subscription_bluscreamlp_7_day' %}
-    {%- set s_fb = 'sensor.claude_subscription_bluscreamlp_weekly_fable' %}
-    - {{ '🔴' if state_attr(s_5h, 'status') == 'exhausted' else '🟢' }} 5-Hour: {{ states(s_5h) }}
-    - {{ '🔴' if state_attr(s_7d, 'status') == 'exhausted' else '🟢' }} 7-Day: {{ states(s_7d) }}
-    - {{ '🔴' if state_attr(s_fb, 'status') == 'exhausted' else '🟢' }} Weekly Fable: {{ states(s_fb) }}
+- **Claude AI (bluscreamlp)**
+{%- set s_5h = 'sensor.claude_subscription_bluscreamlp_5_hour' %}
+  {%- set s_7d = 'sensor.claude_subscription_bluscreamlp_7_day' %}
+  {%- set s_fb = 'sensor.claude_subscription_bluscreamlp_weekly_fable' %}
+  - {{ '🔴' if state_attr(s_5h, 'status') == 'exhausted' else '🟢' }} 5-Hour: {{ states(s_5h) }}
+  - {{ '🔴' if state_attr(s_7d, 'status') == 'exhausted' else '🟢' }} 7-Day: {{ states(s_7d) }}
+  - {{ '🔴' if state_attr(s_fb, 'status') == 'exhausted' else '🟢' }} Weekly Fable: {{ states(s_fb) }}
 
-  - **Antigravity (bluscreamlp)** (🪙 {{ states('sensor.antigravity_bluscreamlp_ai_credits') }})
-    {%- set s_gem = 'sensor.antigravity_bluscreamlp_gemini' %}
-    {%- set s_gpt = 'sensor.antigravity_bluscreamlp_claude_gpt' %}
-    - {{ '🔴' if state_attr(s_gem, 'status') == 'exhausted' else '🟢' }} Gemini: {{ states(s_gem) }}
-    - {{ '🔴' if state_attr(s_gpt, 'status') == 'exhausted' else '🟢' }} Claude & GPT: {{ states(s_gpt) }}
+- **Google AI (bluscreamlp)** (🪙 {{ states('sensor.antigravity_bluscreamlp_ai_credits') }})
+  {%- set s_gem = 'sensor.antigravity_bluscreamlp_gemini' %}
+  {%- set s_gpt = 'sensor.antigravity_bluscreamlp_claude_gpt' %}
+  - {{ '🔴' if state_attr(s_gem, 'status') == 'exhausted' else '🟢' }} Gemini: {{ states(s_gem) }}
+  - {{ '🔴' if state_attr(s_gpt, 'status') == 'exhausted' else '🟢' }} Claude & GPT: {{ states(s_gpt) }}
 
-  - **Antigravity (omitomit1)** (🪙 {{ states('sensor.antigravity_omitomit1_ai_credits') }})
-    {%- set s_gem2 = 'sensor.antigravity_omitomit1_gemini' %}
-    {%- set s_gpt2 = 'sensor.antigravity_omitomit1_claude_gpt' %}
-    - {{ '🔴' if state_attr(s_gem2, 'status') == 'exhausted' else '🟢' }} Gemini: {{ states(s_gem2) }}
-    - {{ '🔴' if state_attr(s_gpt2, 'status') == 'exhausted' else '🟢' }} Claude & GPT: {{ states(s_gpt2) }}
+- **Google AI (omitomit1)** (🪙 {{ states('sensor.antigravity_omitomit1_ai_credits') }})
+  {%- set s_gem2 = 'sensor.antigravity_omitomit1_gemini' %}
+  {%- set s_gpt2 = 'sensor.antigravity_omitomit1_claude_gpt' %}
+  - {{ '🔴' if state_attr(s_gem2, 'status') == 'exhausted' else '🟢' }} Gemini: {{ states(s_gem2) }}
+  - {{ '🔴' if state_attr(s_gpt2, 'status') == 'exhausted' else '🟢' }} Claude & GPT: {{ states(s_gpt2) }}
