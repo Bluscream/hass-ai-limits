@@ -158,7 +158,19 @@ This integration includes a custom dashboard card that dynamically gathers all c
 ### Adding the Card:
 1. Go to your dashboard and select **Edit Dashboard**.
 2. Click **Add Card**.
-3. Search for and choose **AI Limits Card** (or add `type: custom:ai-limits-card` in YAML mode).
+3. Search for and choose **AI Limits Card**.
+
+Or add it manually in YAML mode:
+
+```yaml
+type: custom:ai-limits-card
+title: "AI Limits"             # Optional (omit or set to "" to hide card header)
+icon: "mdi:gauge"              # Optional (omit or set to "" to hide icon)
+show_header: true              # Optional (set to false to fully omit the header)
+ok_color: "#2ecc71"            # Optional (custom color for active limits)
+exhausted_color: "#e74c3c"     # Optional (primary stripe color for exhausted limits)
+exhausted_bg_color: "#7f8c8d"  # Optional (secondary stripe color for exhausted limits)
+```
 
 - **Active limits** display as a green progress bar showing the remaining percentage.
 - **Exhausted limits** display as an animated red/gray striped bar showing progress towards reset.
