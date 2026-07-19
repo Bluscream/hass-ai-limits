@@ -53,6 +53,21 @@ async def async_setup_entry(
     except Exception as err:
         _LOGGER.warning("Could not auto-register Lovelace resource: %s", err)
 
+    # Auto-copy blueprint to config blueprints directory
+    try:
+        import shutil
+        import os
+        src_bp = hass.config.path("custom_components", "ai_limits", "blueprints", "ai_limits_reset_notification.yaml")
+        dst_dir = hass.config.path("blueprints", "automation", "ai_limits")
+        dst_bp = os.path.join(dst_dir, "ai_limits_reset_notification.yaml")
+        if os.path.exists(src_bp):
+            os.makedirs(dst_dir, exist_ok=True)
+            if not os.path.exists(dst_bp) or os.path.getmtime(src_bp) > os.path.getmtime(dst_bp):
+                shutil.copy2(src_bp, dst_bp)
+                _LOGGER.info("Copied AI Limits reset notification blueprint to %s", dst_bp)
+    except Exception as err:
+        _LOGGER.warning("Could not auto-copy blueprint: %s", err)
+
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(entry.add_update_listener(_async_update_listener))
     return True

@@ -151,6 +151,33 @@ add their entities.
 
 ---
 
+## Lovelace Dashboard Card
+
+This integration includes a custom dashboard card that dynamically gathers all configured Claude/Google AI accounts and lists their limits with a progress bar. 
+
+### Adding the Card:
+1. Go to your dashboard and select **Edit Dashboard**.
+2. Click **Add Card**.
+3. Search for and choose **AI Limits Card** (or add `type: custom:ai-limits-card` in YAML mode).
+
+- **Active limits** display as a green progress bar showing the remaining percentage.
+- **Exhausted limits** display as an animated red/gray striped bar showing progress towards reset.
+
+---
+
+## Automation Blueprint
+
+The integration automatically installs a notification blueprint to your local Home Assistant instance on startup: `blueprints/automation/ai_limits/ai_limits_reset_notification.yaml`.
+
+This blueprint allows you to easily set up notifications on your devices (including your PC/ntfy) when a limit resets, triggering **only if the limit was fully exhausted/used up** beforehand.
+
+### Setting it up:
+1. Go to **Settings → Automations & Scenes → Blueprints**.
+2. Find **AI Limits Reset Notification** and click **Create Automation**.
+3. Select the utilization sensors you want to monitor, your target notification script (expects `script.notify` interface), and the target severity/scope (e.g. `blu`).
+
+---
+
 ## How it works (endpoints)
 
 - Claude: `GET /api/organizations/{org}` (plan/tier),
