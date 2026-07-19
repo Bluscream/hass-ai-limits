@@ -15,6 +15,18 @@ _LOGGER = logging.getLogger(__name__)
 type AILimitsConfigEntry = ConfigEntry[AILimitsCoordinator]
 
 
+def _copy_blueprint(hass: HomeAssistant, src_bp: str, dst_dir: str, dst_bp: str) -> bool:
+    """Synchronous blueprint copying function run in the executor."""
+    import os
+    import shutil
+    if os.path.exists(src_bp):
+        os.makedirs(dst_dir, exist_ok=True)
+        if not os.path.exists(dst_bp) or os.path.getmtime(src_bp) > os.path.getmtime(dst_bp):
+            shutil.copy2(src_bp, dst_bp)
+            return True
+    return False
+
+
 async def async_setup_entry(
     hass: HomeAssistant, entry: AILimitsConfigEntry
 ) -> bool:
@@ -40,11 +52,16 @@ async def async_setup_entry(
         ])
     except (ImportError, AttributeError):
         # Fallback for older Home Assistant versions
-        hass.http.register_static_path(
-            "/ai-limits-card/ai-limits-card.js",
-            hass.config.path("custom_components/ai_limits/frontend/ai-limits-card.js"),
-            cache_headers=False,
-        )
+        try:
+            hass.http.register_static_path(
+                "/ai-limits-card/ai-limits-card.js",
+                hass.config.path("custom_components/ai_limits/frontend/ai-limits-card.js"),
+                cache_headers=False,
+            )
+        except RuntimeError:
+            pass # Already registered by another config entry
+    except RuntimeError:
+        pass # Already registered by another config entry
 
     # Auto-register Lovelace card resource
     try:
@@ -64,18 +81,15 @@ async def async_setup_entry(
     except Exception as err:
         _LOGGER.warning("Could not auto-register Lovelace resource: %s", err)
 
-    # Auto-copy blueprint to config blueprints directory
+    # Auto-copy blueprint to config blueprints directory (non-blocking executor)
     try:
-        import shutil
         import os
         src_bp = hass.config.path("custom_components", "ai_limits", "blueprints", "ai_limits_reset_notification.yaml")
         dst_dir = hass.config.path("blueprints", "automation", "ai_limits")
         dst_bp = os.path.join(dst_dir, "ai_limits_reset_notification.yaml")
-        if os.path.exists(src_bp):
-            os.makedirs(dst_dir, exist_ok=True)
-            if not os.path.exists(dst_bp) or os.path.getmtime(src_bp) > os.path.getmtime(dst_bp):
-                shutil.copy2(src_bp, dst_bp)
-                _LOGGER.info("Copied AI Limits reset notification blueprint to %s", dst_bp)
+        copied = await hass.async_add_executor_job(_copy_blueprint, hass, src_bp, dst_dir, dst_bp)
+        if copied:
+            _LOGGER.info("Copied AI Limits reset notification blueprint to %s", dst_bp)
     except Exception as err:
         _LOGGER.warning("Could not auto-copy blueprint: %s", err)
 
