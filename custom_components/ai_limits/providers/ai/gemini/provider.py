@@ -119,7 +119,7 @@ class GeminiProvider(AIProvider):
 
     async def _load_tier(self, headers: dict, data: LimitsData) -> None:
         request = LoadCodeAssistRequest(
-            metadata=ClientMetadata(gm_oauth.CLIENT_METADATA)
+            metadata=ClientMetadata(CLIENT_METADATA)
         )
         try:
             resp = await self.session.post(

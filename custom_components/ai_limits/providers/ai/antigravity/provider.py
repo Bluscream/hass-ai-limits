@@ -131,7 +131,7 @@ class AntigravityProvider(AIProvider):
         return data
 
     async def _onboard(self, headers: dict) -> str | None:
-        body = {"tier_id": "free-tier", "metadata": ag_oauth.CLIENT_METADATA}
+        body = {"tier_id": "free-tier", "metadata": CLIENT_METADATA}
         try:
             resp = await self.session.post(
                 f"{DAILY}:onboardUser", headers=headers, json=body
@@ -150,7 +150,7 @@ class AntigravityProvider(AIProvider):
             return None
 
     async def _load_tier(self, headers: dict, data: LimitsData) -> str | None:
-        body = {"metadata": ag_oauth.CLIENT_METADATA}
+        body = {"metadata": CLIENT_METADATA}
         try:
             resp = await self.session.post(
                 f"{CLOUDCODE}:loadCodeAssist", headers=headers, json=body
