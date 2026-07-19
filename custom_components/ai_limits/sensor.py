@@ -135,13 +135,6 @@ def _base_descriptions() -> list[AILimitsSensorDescription]:
                 else (round(d.reset_in) if d.reset_in is not None else None)
             ),
         ),
-        AILimitsSensorDescription(
-            key="markdown_card",
-            name="Markdown Card",
-            icon="mdi:card-text",
-            entity_category=EntityCategory.DIAGNOSTIC,
-            value_fn=lambda d: len(d.windows) if d else 0,
-        ),
     ]
 
 
@@ -220,8 +213,6 @@ class AILimitsSensor(AILimitsEntity, SensorEntity):
 
     @property
     def extra_state_attributes(self) -> dict | None:
-        if self.entity_description.key == "markdown_card":
-            return {"markdown": self._generate_markdown_card()}
         if self.entity_description.attr_fn is None:
             return None
         return {
@@ -229,52 +220,3 @@ class AILimitsSensor(AILimitsEntity, SensorEntity):
             for k, v in self.entity_description.attr_fn(self.coordinator.data).items()
             if v is not None
         }
-
-    def _generate_markdown_card(self) -> str:
-        """Generate Lovelace Markdown card content showing all accounts."""
-        lines = []
-        entries = self.hass.config_entries.async_entries("ai_limits")
-        for entry in entries:
-            coordinator = getattr(entry, "runtime_data", None)
-            if not coordinator or not coordinator.data:
-                continue
-
-            data = coordinator.data
-            provider = entry.data.get("provider")
-
-            provider_name = "Claude AI" if provider == "claude_web" else "Google AI"
-            account_name = entry.title
-
-            header = f"- **{provider_name} ({account_name})**"
-            if data.credits_available is not None:
-                credits_val = int(data.credits_available)
-                header += f" (🪙 {credits_val})"
-
-            lines.append(header)
-
-            for key, win in data.windows.items():
-                status = win.status
-                emoji = "🔴" if status == "exhausted" else "🟢"
-
-                label = win.label or WINDOW_LABELS.get(key, key)
-
-                state_str = "Unknown"
-                reset_in = _window_reset_in(win)
-                if win.utilization is not None:
-                    remaining = round(100 - win.utilization * 100)
-                    exhausted = remaining <= 0 or win.is_exhausted
-                    if exhausted:
-                        if reset_in:
-                            state_str = f"Resets in {_fmt_duration(reset_in)}"
-                        else:
-                            state_str = "0% remaining"
-                    else:
-                        state_str = f"{remaining}% remaining"
-                elif reset_in:
-                    state_str = f"Resets in {_fmt_duration(reset_in)}"
-
-                lines.append(f"  - {emoji} {label}: {state_str}")
-
-            lines.append("")
-
-        return "\n".join(lines).strip()
