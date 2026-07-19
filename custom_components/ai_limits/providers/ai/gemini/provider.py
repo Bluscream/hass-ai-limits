@@ -18,10 +18,6 @@ from ...const import (
 )
 from ...models import LimitsData, OAuthTokens
 from ...auth import OAuthProvider, OAuthError
-
-CONF_ACCESS_TOKEN = "access_token"
-CONF_REFRESH_TOKEN = "refresh_token"
-CONF_EXPIRES_AT = "expires_at"
 from ..base import AIProvider
 from ..codeassist_models import (
     ClientMetadata,
@@ -30,6 +26,11 @@ from ..codeassist_models import (
     apply_credits,
 )
 from .models import RetrieveUserQuotaRequest, RetrieveUserQuotaResponse
+
+CONF_ACCESS_TOKEN = "access_token"
+CONF_REFRESH_TOKEN = "refresh_token"
+CONF_EXPIRES_AT = "expires_at"
+
 
 def _dec(b: list[int]) -> str:
     return bytes([x ^ 0x42 for x in b]).decode("utf-8")

@@ -1,14 +1,14 @@
-"""Placeholder stubs for future providers."""
+"""Stub providers for standard AI subscription/API services."""
 
 from __future__ import annotations
 
 import logging
 from aiohttp import ClientError
 
+from ...const import STATUS_ERROR
 from ...models import LimitsData
 from ..base import AIProvider
 
-STATUS_ERROR = "error"
 _LOGGER = logging.getLogger(__name__)
 
 

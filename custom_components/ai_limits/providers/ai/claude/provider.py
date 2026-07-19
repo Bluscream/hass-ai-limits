@@ -17,10 +17,17 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.util import dt as dt_util
 
 from ...const import (
+    CONF_DELETE_AFTER,
+    CONF_ENABLE_PROBE,
+    CONF_PROBE_MODEL,
+    DEFAULT_DELETE_AFTER,
+    DEFAULT_ENABLE_PROBE,
+    DEFAULT_PROBE_MODEL,
     STATUS_ERROR,
     STATUS_OK,
     STATUS_RATE_LIMITED,
 )
+
 from ...models import LimitsData
 from ..base import AIProvider, AuthError, CannotConnect
 from .models import ClaudeOrganization, CompletionRequest, MessageLimit, UsageReport
@@ -31,16 +38,11 @@ BASE_URL = "https://claude.ai"
 CONF_COOKIE = "cookie"
 CONF_USER_AGENT = "user_agent"
 CONF_ORG_UUID = "org_uuid"
-CONF_ENABLE_PROBE = "enable_probe"
-CONF_PROBE_MODEL = "probe_model"
-CONF_DELETE_AFTER = "delete_after"
-DEFAULT_ENABLE_PROBE = False
-DEFAULT_DELETE_AFTER = True
-DEFAULT_PROBE_MODEL = "claude-fable-5"
 DEFAULT_USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
 )
+
 
 
 def _find_dict(obj, key: str):

@@ -24,8 +24,17 @@ from homeassistant.helpers.selector import (
 
 from .const import (
     CONF_ACCOUNT_NAME,
+    CONF_DELETE_AFTER,
+    CONF_ENABLE_PROBE,
+    CONF_PROBE_MODEL,
     CONF_PROVIDER,
+    CONF_SCAN_INTERVAL,
+    DEFAULT_DELETE_AFTER,
+    DEFAULT_ENABLE_PROBE,
+    DEFAULT_PROBE_MODEL,
+    DEFAULT_SCAN_INTERVAL,
     DOMAIN,
+    MIN_SCAN_INTERVAL,
 )
 from .providers import REGISTRY, menu_options, AuthError, CannotConnect
 from .providers.auth import OAuthProvider, OAuthError

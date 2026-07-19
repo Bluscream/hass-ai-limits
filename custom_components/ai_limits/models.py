@@ -121,6 +121,29 @@ class LimitsData:
             soonest = secs if soonest is None else min(soonest, secs)
         self.reset_in = soonest
 
+    def update_window(
+        self,
+        label: str,
+        used: float,
+        limit: float,
+        window_seconds: float,
+        group: str | None = None,
+    ) -> None:
+        """Convenience: add/update a WindowData by label from raw used/limit counts.
+
+        utilization = used / limit (clamped 0..1).
+        resets_at is not set (providers that need it build WindowData directly).
+        """
+        key = slug(label)
+        utilization = min(1.0, used / limit) if limit else 0.0
+        status = "within_limit" if utilization < 1.0 else "rate_limited"
+        self.windows[key] = WindowData(
+            status=status,
+            utilization=utilization,
+            label=label,
+            group=group,
+        )
+
 
 # ---------------------------------------------------------------------------
 # OAuth (shared by all OAuth providers)

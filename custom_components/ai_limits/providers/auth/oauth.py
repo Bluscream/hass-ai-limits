@@ -33,7 +33,7 @@ class OAuthProvider(AuthProvider):
         self.auth_url = config["auth_url"]
         self.token_url = config["token_url"]
         self.client_id = config["client_id"]
-        self.client_secret = config["client_secret"]
+        self.client_secret = config.get("client_secret")  # Optional for public clients
         self.redirect_uri = config["redirect_uri"]
         self.scopes = config["scopes"]
         self.use_pkce = config.get("use_pkce", False)

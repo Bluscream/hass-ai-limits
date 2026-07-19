@@ -19,13 +19,13 @@ from ...const import (
 )
 from ...models import LimitsData, OAuthTokens
 from ...auth import OAuthProvider, OAuthError
+from ..base import AIProvider
+from ..codeassist_models import LoadCodeAssistResponse, apply_credits
+from .models import FetchAvailableModelsResponse, onboard_project
 
 CONF_ACCESS_TOKEN = "access_token"
 CONF_REFRESH_TOKEN = "refresh_token"
 CONF_EXPIRES_AT = "expires_at"
-from ..base import AIProvider
-from ..codeassist_models import LoadCodeAssistResponse, apply_credits
-from .models import FetchAvailableModelsResponse, onboard_project
 
 def _dec(b: list[int]) -> str:
     return bytes([x ^ 0x42 for x in b]).decode("utf-8")
