@@ -1,0 +1,48 @@
+alias: "AI Limits: Notify Model Reset"
+description: "Notifies when an AI model limit resets and becomes available again, only if it was fully used up."
+mode: parallel
+max: 10
+
+trigger:
+  - platform: state
+    entity_id:
+      # Antigravity limits
+      - sensor.antigravity_bluscreamlp_claude_gpt
+      - sensor.antigravity_bluscreamlp_gemini
+      - sensor.antigravity_omitomit1_claude_gpt
+      - sensor.antigravity_omitomit1_gemini
+      # Claude subscription limits
+      - sensor.claude_subscription_bluscreamlp_5_hour
+      - sensor.claude_subscription_bluscreamlp_7_day
+      - sensor.claude_subscription_bluscreamlp_weekly_fable
+      # (Add any additional utilization sensors here as needed)
+
+condition:
+  - condition: template
+    value_template: >-
+      {# Ensure both states exist #}
+      {{ trigger.from_state is not none and trigger.to_state is not none and
+         trigger.from_state.state != trigger.to_state.state }}
+  - condition: template
+    value_template: >-
+      {# Verify it was exhausted before (remaining_percent was 0 or status was exhausted) #}
+      {% set was_exhausted = trigger.from_state.attributes.status == 'exhausted' or 
+                             trigger.from_state.attributes.remaining_percent == 0 or
+                             trigger.from_state.state is search('Resets in') %}
+      {# Verify it is now available #}
+      {% set is_available = trigger.to_state.attributes.status == 'within_limit' or 
+                            trigger.to_state.attributes.remaining_percent > 0 or
+                            trigger.to_state.state is search('% remaining') %}
+      {{ was_exhausted and is_available }}
+
+action:
+  - action: script.notify
+    data:
+      title: "🤖 AI Limit Reset"
+      message: >-
+        {{ trigger.to_state.attributes.friendly_name }} is available again!
+        Current state: {{ trigger.to_state.state }}
+      severity: "blu"
+      icon: "mdi:clock-start"
+      tag: "ai_limit_reset_{{ trigger.entity_id.split('.')[-1] }}"
+      via_notification: true
