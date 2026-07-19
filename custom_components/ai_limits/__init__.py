@@ -28,6 +28,31 @@ async def async_setup_entry(
     await coordinator.async_config_entry_first_refresh()
     entry.runtime_data = coordinator
 
+    # Register static path for the Lovelace card
+    hass.http.register_static_path(
+        "/ai-limits-card/ai-limits-card.js",
+        hass.config.path("custom_components/ai_limits/ai-limits-card.js"),
+        cache_headers=False,
+    )
+
+    # Auto-register Lovelace card resource
+    try:
+        lovelace = hass.data.get("lovelace")
+        if lovelace and hasattr(lovelace, "resources"):
+            resources = lovelace.resources
+            exists = False
+            for item in resources.async_items():
+                if item.get("url") == "/ai-limits-card/ai-limits-card.js":
+                    exists = True
+                    break
+            if not exists:
+                await resources.async_create_item({
+                    "res_type": "module",
+                    "url": "/ai-limits-card/ai-limits-card.js"
+                })
+    except Exception as err:
+        _LOGGER.warning("Could not auto-register Lovelace resource: %s", err)
+
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(entry.add_update_listener(_async_update_listener))
     return True
