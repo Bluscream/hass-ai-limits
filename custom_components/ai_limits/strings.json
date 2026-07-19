@@ -1,0 +1,76 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add an AI account",
+        "description": "Pick which account to track. Add the integration again for more.",
+        "menu_options": {
+          "claude_web": "Claude subscription (web session cookie)",
+          "antigravity": "Google AI - Code Assist: Gemini, Claude & GPT (OAuth)"
+        }
+      },
+      "antigravity": {
+        "title": "Connect Antigravity (Google AI Pro)",
+        "description": "Mirrors Antigravity's Settings → Models view: the Gemini and Claude & GPT quota groups plus your AI Credits.\n\n**Step 1.** Open this URL and sign in with the same Google account you use in Antigravity:\n\n{auth_url}\n\n**Step 2.** Click Allow. Your browser will then try to open an address starting with `http://localhost:8765/...` and show an error like \"This site can't be reached\". **That is expected — do not close it.**\n\n**Step 3.** Copy the **entire address** from your browser's address bar (it contains `?code=...`) and paste it into the field below. You can paste the whole URL — the code is pulled out automatically.\n\nUnofficial: uses Antigravity's own OAuth client and a private Google API.",
+        "data": {
+          "account_name": "Account name",
+          "authorization_code": "Paste the localhost URL from your browser"
+        },
+        "data_description": {
+          "authorization_code": "This is NOT typed by hand. After approving, copy the full 'http://localhost:8765/oauth-callback?code=...' address from your browser's address bar (even though the page failed to load) and paste it here."
+        }
+      },
+      "claude_web": {
+        "title": "Add a Claude subscription",
+        "description": "Reads Claude subscription usage from claude.ai using your browser session — via the same passive usage endpoint the Claude desktop app polls (no messages sent).\n\nSign in at claude.ai, open DevTools → Network, click any request to claude.ai, and copy the entire `Cookie` request header (must include `sessionKey` and `cf_clearance`). The User-Agent should match that browser.\n\nUnofficial — re-paste the cookie when it expires.",
+        "data": {
+          "account_name": "Account name",
+          "cookie": "Cookie header",
+          "user_agent": "User-Agent"
+        }
+      },
+      "google_codeassist": {
+        "title": "Connect Gemini Code Assist",
+        "description": "Reads your Gemini Code Assist quota (the same backend Antigravity / gemini-cli use). This gives real per-model usage — passively, no prompts sent.\n\n1. Open this URL and sign in with your Google account:\n\n{auth_url}\n\n2. Approve access. The page then shows an authorization code.\n3. Paste that code below with a name for this account.\n\nUnofficial: uses gemini-cli's OAuth client and a private Google API; may break if Google changes it.",
+        "data": {
+          "account_name": "Account name",
+          "authorization_code": "Authorization code"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Update cookie",
+        "description": "The session cookie for {account} expired or was rejected. Paste a fresh `Cookie` header.",
+        "data": {
+          "cookie": "Cookie header"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "The credentials were rejected (expired session or Cloudflare block). Grab fresh ones.",
+      "cannot_connect": "Could not reach the provider.",
+      "oauth_failed": "Could not exchange the authorization code. Get a fresh code and try again.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "already_configured": "An account with this name already exists.",
+      "reauth_successful": "Credentials updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "AI Limits options",
+        "description": "Edit this account's details and options. Leave the cookie blank to keep the current one. The Claude active probe is only a fallback for accounts where the passive /usage endpoint returns nothing; Google Code Assist is always passive.",
+        "data": {
+          "account_name": "Account name",
+          "cookie": "Cookie header (blank = keep current)",
+          "user_agent": "User-Agent",
+          "enable_probe": "Enable active probe fallback (Claude; sends a message only if /usage is empty)",
+          "delete_after": "Delete the probe conversation after each poll",
+          "probe_model": "Probe model",
+          "scan_interval": "Poll interval (seconds)"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "domain": "ai_limits",
+  "name": "AI Limits",
+  "codeowners": ["@Bluscream", "@claude", "@gemini"],
+  "config_flow": true,
+  "documentation": "https://github.com/Bluscream/hass-ai-limits",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/Bluscream/hass-ai-limits/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}
