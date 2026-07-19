@@ -29,11 +29,22 @@ async def async_setup_entry(
     entry.runtime_data = coordinator
 
     # Register static path for the Lovelace card
-    hass.http.register_static_path(
-        "/ai-limits-card/ai-limits-card.js",
-        hass.config.path("custom_components/ai_limits/frontend/ai-limits-card.js"),
-        cache_headers=False,
-    )
+    try:
+        from homeassistant.components.http import StaticPathConfig
+        await hass.http.async_register_static_paths([
+            StaticPathConfig(
+                url_path="/ai-limits-card/ai-limits-card.js",
+                path=hass.config.path("custom_components/ai_limits/frontend/ai-limits-card.js"),
+                cache_headers=False,
+            )
+        ])
+    except (ImportError, AttributeError):
+        # Fallback for older Home Assistant versions
+        hass.http.register_static_path(
+            "/ai-limits-card/ai-limits-card.js",
+            hass.config.path("custom_components/ai_limits/frontend/ai-limits-card.js"),
+            cache_headers=False,
+        )
 
     # Auto-register Lovelace card resource
     try:
