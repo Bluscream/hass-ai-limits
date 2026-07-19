@@ -17,6 +17,15 @@ class AILimitsCard extends HTMLElement {
     return 3;
   }
 
+  static getStubConfig() {
+    return {
+      type: "custom:ai-limits-card",
+      title: "AI Limits",
+      icon: "mdi:gauge",
+      show_header: true
+    };
+  }
+
   render() {
     if (!this._hass) return;
 
@@ -188,10 +197,20 @@ class AILimitsCard extends HTMLElement {
         }
       </style>
       <ha-card>
-        <div class="title">
-          <ha-icon icon="mdi:gauge"></ha-icon>
-          <span>AI Limits</span>
-        </div>
+        ${(() => {
+          const showHeader = this._config.show_header !== false;
+          const title = this._config.title !== undefined ? this._config.title : "AI Limits";
+          const icon = this._config.icon !== undefined ? this._config.icon : "mdi:gauge";
+          if (showHeader && (title || icon)) {
+            return `
+              <div class="title">
+                ${icon ? `<ha-icon icon="${icon}"></ha-icon>` : ""}
+                ${title ? `<span>${title}</span>` : ""}
+              </div>
+            `;
+          }
+          return "";
+        })()}
     `;
 
     const keys = Object.keys(groups);
