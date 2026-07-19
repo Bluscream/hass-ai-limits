@@ -31,7 +31,7 @@ async def async_setup_entry(
     # Register static path for the Lovelace card
     hass.http.register_static_path(
         "/ai-limits-card/ai-limits-card.js",
-        hass.config.path("custom_components/ai_limits/ai-limits-card.js"),
+        hass.config.path("custom_components/ai_limits/frontend/ai-limits-card.js"),
         cache_headers=False,
     )
 
