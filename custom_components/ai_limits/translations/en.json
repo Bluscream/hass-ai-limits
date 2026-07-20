@@ -1,0 +1,198 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add an AI account",
+        "description": "Pick which account to track. Add the integration again for more.",
+        "menu_options": {
+          "claude_web": "Claude Subscription (Anthropic)",
+          "claude_api": "Claude API Token (Anthropic)",
+          "google_one": "Google One Subscription (Google)",
+          "gemini_api": "Gemini API Token (Google)",
+          "devin": "Devin (formerly Windsurf)",
+          "chatgpt_sub": "ChatGPT Subscription (OpenAI)",
+          "chatgpt_api": "ChatGPT API Token (OpenAI)",
+          "antigravity": "Google AI - Code Assist: Gemini, Claude & GPT (OAuth)"
+        }
+      },
+      "select_saved_login": {
+        "title": "Select a saved login",
+        "description": "Choose an existing saved login to reuse, or select to log in with new credentials.",
+        "data": {
+          "saved_login": "Saved login"
+        }
+      },
+      "reused_name": {
+        "title": "Name your account",
+        "description": "Enter a name for this new instance of the provider (reusing your saved credentials).",
+        "data": {
+          "account_name": "Account name"
+        }
+      },
+      "devin": {
+        "title": "Add a Devin account",
+        "menu_options": {
+          "devin_google_oauth": "Log in via Google",
+          "devin_github_oauth": "Log in via GitHub",
+          "devin_token": "Log in via Direct Bearer Token"
+        }
+      },
+      "devin_token": {
+        "title": "Devin Direct Token",
+        "description": "Reads Devin quota usage and billing status.\n\nOpen Devin in your browser or app, open DevTools → Network, click any request to `app.devin.ai/api`, and copy the Bearer token (starting with `auth1_`) from the `Authorization` header and the Organization ID from the `x-cog-org-id` header.",
+        "data": {
+          "account_name": "Account name",
+          "devin_token": "Bearer token (starts with auth1_)",
+          "devin_org": "Organization ID (e.g. org-dfbd58...)"
+        }
+      },
+      "devin_github_oauth": {
+        "title": "Devin GitHub Login",
+        "description": "Log in to Devin using GitHub OAuth.\n\n1. [Authorize Devin via GitHub]({auth_url})\n2. After authorizing, paste the callback code or URL below.",
+        "data": {
+          "account_name": "Account name",
+          "authorization_code": "Authorization code or callback URL"
+        }
+      },
+      "devin_google_oauth": {
+        "title": "Devin Google Login",
+        "description": "Log in to Devin using Google OAuth.\n\n1. [Authorize Devin via Google]({auth_url})\n2. After authorizing, paste the callback code or URL below.",
+        "data": {
+          "account_name": "Account name",
+          "authorization_code": "Authorization code or callback URL"
+        }
+      },
+      "claude_api": {
+        "title": "Add a Claude API Account",
+        "description": "Monitor Anthropic Developer API usage.\n\nEnter your account name and API key below.",
+        "data": {
+          "account_name": "Account name",
+          "api_key": "API Key"
+        }
+      },
+
+      "gemini_api": {
+        "title": "Gemini API Token",
+        "description": "Monitor Google AI Studio Gemini API usage.\n\nEnter your account name and API key below.",
+        "data": {
+          "account_name": "Account name",
+          "api_key": "API Key"
+        }
+      },
+      "chatgpt_sub": {
+        "title": "ChatGPT Subscription",
+        "description": "Monitor OpenAI ChatGPT Plus subscription limits (Stub).",
+        "data": {
+          "account_name": "Account name"
+        }
+      },
+      "chatgpt_api": {
+        "title": "ChatGPT API Token",
+        "description": "Monitor OpenAI Platform API token usage.\n\nEnter your account name and API key below.",
+        "data": {
+          "account_name": "Account name",
+          "api_key": "API Key"
+        }
+      },
+      "copilot_sub": {
+        "title": "Copilot Subscription",
+        "description": "Monitor Copilot Subscription limits (Stub).",
+        "data": {
+          "account_name": "Account name"
+        }
+      },
+      "github_copilot": {
+        "title": "GitHub Copilot",
+        "description": "Monitor GitHub Copilot limits (Stub).",
+        "data": {
+          "account_name": "Account name"
+        }
+      },
+      "deepseek_api": {
+        "title": "DeepSeek API Token",
+        "description": "Monitor DeepSeek API usage.\n\nEnter your account name and API key below.",
+        "data": {
+          "account_name": "Account name",
+          "api_key": "API Key"
+        }
+      },
+      "openrouter_api": {
+        "title": "OpenRouter API Token",
+        "description": "Monitor OpenRouter API usage.\n\nEnter your account name and API key below.",
+        "data": {
+          "account_name": "Account name",
+          "api_key": "API Key"
+        }
+      },
+      "perplexity_sub": {
+        "title": "Perplexity Subscription",
+        "description": "Monitor Perplexity Subscription limits (Stub).",
+        "data": {
+          "account_name": "Account name"
+        }
+      },
+      "antigravity": {
+        "title": "Google One Subscription (Google)",
+        "description": "Mirrors Antigravity's Settings → Models view: the Gemini and Claude & GPT quota groups plus your AI Credits.\n\n**Step 1.** Open this URL and sign in with the same Google account you use in Antigravity:\n\n{auth_url}\n\n**Step 2.** Click Allow. Your browser will then try to open an address starting with `http://localhost:8765/...` and show an error like \"This site can't be reached\". **That is expected — do not close it.**\n\n**Step 3.** Copy the **entire address** from your browser's address bar (it contains `?code=...`) and paste it into the field below. You can paste the whole URL — the code is pulled out automatically.\n\nUnofficial: uses Antigravity's own OAuth client and a private Google API.",
+        "data": {
+          "account_name": "Account name",
+          "authorization_code": "Paste the localhost URL from your browser"
+        },
+        "data_description": {
+          "authorization_code": "This is NOT typed by hand. After approving, copy the full 'http://localhost:8765/oauth-callback?code=...' address from your browser's address bar (even though the page failed to load) and paste it here."
+        }
+      },
+      "claude_web": {
+        "title": "Add a Claude subscription",
+        "description": "Reads Claude subscription usage from claude.ai using your browser session — via the same passive usage endpoint the Claude desktop app polls (no messages sent).\n\nSign in at claude.ai, open DevTools → Network, click any request to claude.ai, and copy the entire `Cookie` request header (must include `sessionKey` and `cf_clearance`). The User-Agent should match that browser.\n\nUnofficial — re-paste the cookie when it expires.",
+        "data": {
+          "account_name": "Account name",
+          "cookie": "Cookie header",
+          "user_agent": "User-Agent"
+        }
+      },
+      "google_codeassist": {
+        "title": "Connect Gemini Code Assist",
+        "description": "Reads your Gemini Code Assist quota (the same backend Antigravity / gemini-cli use). This gives real per-model usage — passively, no prompts sent.\n\n1. Open this URL and sign in with your Google account:\n\n{auth_url}\n\n2. Approve access. The page then shows an authorization code.\n3. Paste that code below with a name for this account.\n\nUnofficial: uses gemini-cli's OAuth client and a private Google API; may break if Google changes it.",
+        "data": {
+          "account_name": "Account name",
+          "authorization_code": "Authorization code"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Update cookie",
+        "description": "The session cookie for {account} expired or was rejected. Paste a fresh `Cookie` header.",
+        "data": {
+          "cookie": "Cookie header"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "The credentials were rejected (expired session or Cloudflare block). Grab fresh ones.",
+      "cannot_connect": "Could not reach the provider.",
+      "oauth_failed": "Could not exchange the authorization code. Get a fresh code and try again.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "already_configured": "An account with this name already exists.",
+      "reauth_successful": "Credentials updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "AI Limits options",
+        "description": "Edit this account's details and options. Leave the cookie blank to keep the current one. The Claude active probe is only a fallback for accounts where the passive /usage endpoint returns nothing; Google Code Assist is always passive.",
+        "data": {
+          "account_name": "Account name",
+          "cookie": "Cookie header (blank = keep current)",
+          "user_agent": "User-Agent",
+          "enable_probe": "Enable active probe fallback (Claude; sends a message only if /usage is empty)",
+          "delete_after": "Delete the probe conversation after each poll",
+          "probe_model": "Probe model",
+          "scan_interval": "Poll interval (seconds)"
+        }
+      }
+    }
+  }
+}

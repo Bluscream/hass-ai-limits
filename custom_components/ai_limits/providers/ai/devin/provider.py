@@ -25,7 +25,7 @@ CONF_DEVIN_ORG = "devin_org"
 
 class DevinProvider(AIProvider):
     provider_id = "devin"
-    label = "Devin"
+    label = "Devin (formerly Windsurf)"
     manufacturer = "Cognition AI"
     supported_auth = {
         "devin": {
