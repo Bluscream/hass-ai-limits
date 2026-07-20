@@ -3,11 +3,10 @@
 from __future__ import annotations
 
 import logging
-from aiohttp import ClientError
 
 from ...const import STATUS_ERROR
 from ...models import LimitsData
-from ..base import AIProvider
+from .base import AIProvider
 
 _LOGGER = logging.getLogger(__name__)
 

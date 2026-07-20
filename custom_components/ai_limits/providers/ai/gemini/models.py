@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
 
-from ...models import WindowData, as_float, get, to_datetime
+from ....models import WindowData, as_float, get, to_datetime
 
 
 @dataclass

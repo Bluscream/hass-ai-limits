@@ -10,13 +10,13 @@ import logging
 from aiohttp import ClientError
 from homeassistant.util import dt as dt_util
 
-from ...const import (
+from ....const import (
     CONF_GCP_PROJECT,
     STATUS_ERROR,
     STATUS_OK,
     STATUS_RATE_LIMITED,
 )
-from ...models import LimitsData, OAuthTokens
+from ....models import LimitsData, OAuthTokens
 from ...auth import OAuthProvider, OAuthError
 from ..base import AIProvider
 from ..codeassist_models import (

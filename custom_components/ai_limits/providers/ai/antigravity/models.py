@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
 
-from ...models import WindowData, as_float, get, slug, to_datetime
+from ....models import WindowData, as_float, get, slug, to_datetime
 
 # Map the API's modelProvider to the UI's quota groups.
 MODEL_GROUPS = {

@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
-from datetime import datetime
+
 from typing import Any
 
-from ...models import WindowData, as_float, get, to_datetime
+from ....models import WindowData, as_float, get, to_datetime
 
 # Normalised names for the top-level windows in the /usage response.
 USAGE_WINDOW_NAMES = {
@@ -106,7 +106,7 @@ class UsageReport:
             if not display:
                 continue
             group = lim.get("group") or "weekly"
-            from ...models import slug as _slug
+            from ....models import slug as _slug
 
             key = f"{group}_{_slug(display)}"
             if key in windows:

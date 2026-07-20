@@ -16,7 +16,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.util import dt as dt_util
 
-from ...const import (
+from ....const import (
     CONF_DELETE_AFTER,
     CONF_ENABLE_PROBE,
     CONF_PROBE_MODEL,
@@ -28,7 +28,7 @@ from ...const import (
     STATUS_RATE_LIMITED,
 )
 
-from ...models import LimitsData
+from ....models import LimitsData
 from ..base import AIProvider, AuthError, CannotConnect
 from .models import ClaudeOrganization, CompletionRequest, MessageLimit, UsageReport
 

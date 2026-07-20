@@ -9,12 +9,12 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.util import dt as dt_util
 
-from ...const import (
+from ....const import (
     STATUS_ERROR,
     STATUS_OK,
     STATUS_RATE_LIMITED,
 )
-from ...models import LimitsData, WindowData, to_datetime
+from ....models import LimitsData, WindowData, to_datetime
 from ..base import AIProvider, AuthError, CannotConnect
 
 _LOGGER = logging.getLogger(__name__)

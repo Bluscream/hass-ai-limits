@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from aiohttp import ClientError
 
-from ...models import LimitsData
+from ....models import LimitsData
 from ..base import AIProvider, AuthError, CannotConnect
 
 _LOGGER = logging.getLogger(__name__)

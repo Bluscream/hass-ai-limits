@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timedelta
+from datetime import timedelta
 from urllib.parse import urlencode
 from aiohttp import ClientError
 
 from homeassistant.util import dt as dt_util
 
-from ...models import LimitsData
+from ....models import LimitsData
 from ..base import AIProvider, AuthError, CannotConnect
 
 _LOGGER = logging.getLogger(__name__)
@@ -66,6 +66,24 @@ class ClaudeAPIProvider(AIProvider):
             return LimitsData(status="error", error="Invalid JSON response")
 
         limits = LimitsData(status="ok")
-        # Sum up cost/token usage from messages usage report if available
-        # (This varies based on organization settings, default to ok)
+        # Sum token usage over the queried 7-day window from the usage report.
+        input_tokens = 0
+        output_tokens = 0
+        cache_read = 0
+        cache_creation = 0
+        for bucket in data.get("data", []):
+            for result in bucket.get("results", []):
+                input_tokens += result.get("uncached_input_tokens", 0) or 0
+                output_tokens += result.get("output_tokens", 0) or 0
+                cache_read += result.get("cache_read_input_tokens", 0) or 0
+                creation = result.get("cache_creation", {}) or {}
+                cache_creation += sum(v or 0 for v in creation.values())
+        limits.raw = {
+            "period_days": 7,
+            "uncached_input_tokens": input_tokens,
+            "output_tokens": output_tokens,
+            "cache_read_input_tokens": cache_read,
+            "cache_creation_input_tokens": cache_creation,
+            "total_tokens": input_tokens + output_tokens + cache_read + cache_creation,
+        }
         return limits
