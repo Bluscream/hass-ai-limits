@@ -11,10 +11,7 @@ One account = one config entry = one device. Adding multiple accounts across dif
 | **Claude subscription (web session)** | Claude Pro/Max usage windows (5h, 7d, per-model 7d) | Browser session cookie | None (passive) |
 | **Claude API Token** | Anthropic developer organization messages usage | Anthropic Admin API key | None (passive) |
 | **Google One Subscription (Google)** | Antigravity quota groups (Gemini, Claude, GPT) + AI Credits | Google OAuth | None (passive) |
-| **Gemini API Token** | Google AI Studio developer API quotas | Google OAuth | None (passive) |
-| **Devin** | Devin organization spending state and session limits | Google OAuth / GitHub OAuth / Bearer Token | None (passive) |
-| **ChatGPT Subscription** | ChatGPT Plus/Team usage limits (Stub) | Browser session cookie | None (passive) |
-| **ChatGPT API Token** | OpenAI Platform developer usage and spend (Stub) | OpenAI Admin API key | None (passive) |
+| **Devin (formerly Windsurf)** | Devin organization spending state and session limits | Google OAuth / GitHub OAuth / Bearer Token | None (passive) |
 | **DeepSeek API Token** | DeepSeek Developer API balance | DeepSeek API key | None (passive) |
 | **OpenRouter API Token** | OpenRouter Developer API credit limit and remaining balance | OpenRouter API key | None (passive) |
 
