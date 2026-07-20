@@ -7,12 +7,10 @@
         "menu_options": {
           "claude_web": "Claude Subscription (Anthropic)",
           "claude_api": "Claude API Token (Anthropic)",
-          "google_one": "Google One Subscription (Google)",
-          "gemini_api": "Gemini API Token (Google)",
           "devin": "Devin (formerly Windsurf)",
-          "chatgpt_sub": "ChatGPT Subscription (OpenAI)",
-          "chatgpt_api": "ChatGPT API Token (OpenAI)",
-          "antigravity": "Google AI - Code Assist: Gemini, Claude & GPT (OAuth)"
+          "antigravity": "Google AI - Code Assist: Gemini, Claude & GPT (OAuth)",
+          "deepseek_api": "DeepSeek API Token (DeepSeek)",
+          "openrouter_api": "OpenRouter API Token (OpenRouter)"
         }
       },
       "select_saved_login": {
@@ -70,44 +68,6 @@
           "api_key": "API Key"
         }
       },
-
-      "gemini_api": {
-        "title": "Gemini API Token",
-        "description": "Monitor Google AI Studio Gemini API usage.\n\nEnter your account name and API key below.",
-        "data": {
-          "account_name": "Account name",
-          "api_key": "API Key"
-        }
-      },
-      "chatgpt_sub": {
-        "title": "ChatGPT Subscription",
-        "description": "Monitor OpenAI ChatGPT Plus subscription limits (Stub).",
-        "data": {
-          "account_name": "Account name"
-        }
-      },
-      "chatgpt_api": {
-        "title": "ChatGPT API Token",
-        "description": "Monitor OpenAI Platform API token usage.\n\nEnter your account name and API key below.",
-        "data": {
-          "account_name": "Account name",
-          "api_key": "API Key"
-        }
-      },
-      "copilot_sub": {
-        "title": "Copilot Subscription",
-        "description": "Monitor Copilot Subscription limits (Stub).",
-        "data": {
-          "account_name": "Account name"
-        }
-      },
-      "github_copilot": {
-        "title": "GitHub Copilot",
-        "description": "Monitor GitHub Copilot limits (Stub).",
-        "data": {
-          "account_name": "Account name"
-        }
-      },
       "deepseek_api": {
         "title": "DeepSeek API Token",
         "description": "Monitor DeepSeek API usage.\n\nEnter your account name and API key below.",
@@ -122,13 +82,6 @@
         "data": {
           "account_name": "Account name",
           "api_key": "API Key"
-        }
-      },
-      "perplexity_sub": {
-        "title": "Perplexity Subscription",
-        "description": "Monitor Perplexity Subscription limits (Stub).",
-        "data": {
-          "account_name": "Account name"
         }
       },
       "antigravity": {

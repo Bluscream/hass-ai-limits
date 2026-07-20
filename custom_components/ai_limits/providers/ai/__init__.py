@@ -7,14 +7,6 @@ from .base import AIProvider, AuthError, CannotConnect
 from .claude import ClaudeWebProvider
 from .devin import DevinProvider
 from .gemini import GeminiProvider
-from .stubs import (
-    GeminiAPIProvider,
-    ChatGPTSubProvider,
-    ChatGPTAPIProvider,
-    CopilotSubProvider,
-    GithubCopilotProvider,
-    PerplexitySubProvider,
-)
 from .claude_api.provider import ClaudeAPIProvider
 from .deepseek.provider import DeepSeekAPIProvider
 from .openrouter.provider import OpenRouterAPIProvider
@@ -22,15 +14,9 @@ from .openrouter.provider import OpenRouterAPIProvider
 _ALL: list[type[AIProvider]] = [
     ClaudeWebProvider,
     ClaudeAPIProvider,
-    GeminiAPIProvider,
     DevinProvider,
-    ChatGPTSubProvider,
-    ChatGPTAPIProvider,
-    CopilotSubProvider,
-    GithubCopilotProvider,
     DeepSeekAPIProvider,
     OpenRouterAPIProvider,
-    PerplexitySubProvider,
     AntigravityProvider,
     GeminiProvider,
 ]

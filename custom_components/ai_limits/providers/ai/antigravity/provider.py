@@ -19,7 +19,7 @@ from ....const import (
 )
 from ....models import LimitsData, OAuthTokens
 from ...auth import OAuthProvider, OAuthError
-from ..base import AIProvider
+from ..base import AIProvider, deobfuscate
 from ..codeassist_models import LoadCodeAssistResponse, apply_credits
 from .models import FetchAvailableModelsResponse, onboard_project
 
@@ -27,11 +27,9 @@ CONF_ACCESS_TOKEN = "access_token"
 CONF_REFRESH_TOKEN = "refresh_token"
 CONF_EXPIRES_AT = "expires_at"
 
-def _dec(b: list[int]) -> str:
-    return bytes([x ^ 0x42 for x in b]).decode("utf-8")
 
-CLIENT_ID = _dec([115, 114, 117, 115, 114, 114, 116, 114, 116, 114, 119, 123, 115, 111, 54, 47, 42, 49, 49, 43, 44, 112, 42, 112, 115, 46, 33, 48, 39, 112, 113, 119, 52, 54, 45, 46, 45, 40, 42, 118, 37, 118, 114, 113, 39, 50, 108, 35, 50, 50, 49, 108, 37, 45, 45, 37, 46, 39, 55, 49, 39, 48, 33, 45, 44, 54, 39, 44, 54, 108, 33, 45, 47])
-CLIENT_SECRET = _dec([5, 13, 1, 17, 18, 26, 111, 9, 119, 122, 4, 21, 16, 118, 122, 116, 14, 38, 14, 8, 115, 47, 14, 0, 122, 49, 26, 1, 118, 56, 116, 51, 6, 3, 36])
+CLIENT_ID = deobfuscate([115, 114, 117, 115, 114, 114, 116, 114, 116, 114, 119, 123, 115, 111, 54, 47, 42, 49, 49, 43, 44, 112, 42, 112, 115, 46, 33, 48, 39, 112, 113, 119, 52, 54, 45, 46, 45, 40, 42, 118, 37, 118, 114, 113, 39, 50, 108, 35, 50, 50, 49, 108, 37, 45, 45, 37, 46, 39, 55, 49, 39, 48, 33, 45, 44, 54, 39, 44, 54, 108, 33, 45, 47])
+CLIENT_SECRET = deobfuscate([5, 13, 1, 17, 18, 26, 111, 9, 119, 122, 4, 21, 16, 118, 122, 116, 14, 38, 14, 8, 115, 47, 14, 0, 122, 49, 26, 1, 118, 56, 116, 51, 6, 3, 36])
 
 CLIENT_METADATA = {
     "ide_type": "ANTIGRAVITY",

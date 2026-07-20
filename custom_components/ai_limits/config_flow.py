@@ -400,146 +400,10 @@ class AILimitsConfigFlow(ConfigFlow, domain=DOMAIN):
         return self.async_show_form(step_id="claude_api", data_schema=schema, errors=errors)
 
 
-    async def async_step_gemini_api(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
-        if self._selected_entry_id is None and self._target_provider is None:
-            self._target_provider = "gemini_api"
-            cred_types = self._get_credential_types("gemini_api")
-            matching = self._get_matching_entries(cred_types)
-            if matching:
-                return await self.async_step_select_saved_login()
 
-        errors = {}
-        if user_input is not None:
-            name = user_input[CONF_ACCOUNT_NAME].strip()
-            api_key = user_input["api_key"].strip()
-            await self.async_set_unique_id(f"gemini_api:{name.lower()}")
-            self._abort_if_unique_id_configured()
-            return self.async_create_entry(
-                title=f"Gemini API - {name}",
-                data={
-                    CONF_PROVIDER: "gemini_api",
-                    CONF_ACCOUNT_NAME: name,
-                    "api_key": api_key,
-                },
-            )
-        schema = vol.Schema({
-            vol.Required(CONF_ACCOUNT_NAME): str,
-            vol.Required("api_key"): str,
-        })
-        return self.async_show_form(step_id="gemini_api", data_schema=schema, errors=errors)
 
-    async def async_step_chatgpt_sub(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
-        if self._selected_entry_id is None and self._target_provider is None:
-            self._target_provider = "chatgpt_sub"
-            cred_types = self._get_credential_types("chatgpt_sub")
-            matching = self._get_matching_entries(cred_types)
-            if matching:
-                return await self.async_step_select_saved_login()
 
-        errors = {}
-        if user_input is not None:
-            name = user_input[CONF_ACCOUNT_NAME].strip()
-            await self.async_set_unique_id(f"chatgpt_sub:{name.lower()}")
-            self._abort_if_unique_id_configured()
-            return self.async_create_entry(
-                title=f"ChatGPT Subscription - {name}",
-                data={
-                    CONF_PROVIDER: "chatgpt_sub",
-                    CONF_ACCOUNT_NAME: name,
-                },
-            )
-        schema = vol.Schema({
-            vol.Required(CONF_ACCOUNT_NAME): str,
-        })
-        return self.async_show_form(step_id="chatgpt_sub", data_schema=schema, errors=errors)
 
-    async def async_step_chatgpt_api(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
-        if self._selected_entry_id is None and self._target_provider is None:
-            self._target_provider = "chatgpt_api"
-            cred_types = self._get_credential_types("chatgpt_api")
-            matching = self._get_matching_entries(cred_types)
-            if matching:
-                return await self.async_step_select_saved_login()
-
-        errors = {}
-        if user_input is not None:
-            name = user_input[CONF_ACCOUNT_NAME].strip()
-            api_key = user_input["api_key"].strip()
-            await self.async_set_unique_id(f"chatgpt_api:{name.lower()}")
-            self._abort_if_unique_id_configured()
-            return self.async_create_entry(
-                title=f"ChatGPT API - {name}",
-                data={
-                    CONF_PROVIDER: "chatgpt_api",
-                    CONF_ACCOUNT_NAME: name,
-                    "api_key": api_key,
-                },
-            )
-        schema = vol.Schema({
-            vol.Required(CONF_ACCOUNT_NAME): str,
-            vol.Required("api_key"): str,
-        })
-        return self.async_show_form(step_id="chatgpt_api", data_schema=schema, errors=errors)
-
-    async def async_step_copilot_sub(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
-        if self._selected_entry_id is None and self._target_provider is None:
-            self._target_provider = "copilot_sub"
-            cred_types = self._get_credential_types("copilot_sub")
-            matching = self._get_matching_entries(cred_types)
-            if matching:
-                return await self.async_step_select_saved_login()
-
-        errors = {}
-        if user_input is not None:
-            name = user_input[CONF_ACCOUNT_NAME].strip()
-            await self.async_set_unique_id(f"copilot_sub:{name.lower()}")
-            self._abort_if_unique_id_configured()
-            return self.async_create_entry(
-                title=f"Copilot - {name}",
-                data={
-                    CONF_PROVIDER: "copilot_sub",
-                    CONF_ACCOUNT_NAME: name,
-                },
-            )
-        schema = vol.Schema({
-            vol.Required(CONF_ACCOUNT_NAME): str,
-        })
-        return self.async_show_form(step_id="copilot_sub", data_schema=schema, errors=errors)
-
-    async def async_step_github_copilot(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
-        if self._selected_entry_id is None and self._target_provider is None:
-            self._target_provider = "github_copilot"
-            cred_types = self._get_credential_types("github_copilot")
-            matching = self._get_matching_entries(cred_types)
-            if matching:
-                return await self.async_step_select_saved_login()
-
-        errors = {}
-        if user_input is not None:
-            name = user_input[CONF_ACCOUNT_NAME].strip()
-            await self.async_set_unique_id(f"github_copilot:{name.lower()}")
-            self._abort_if_unique_id_configured()
-            return self.async_create_entry(
-                title=f"GitHub Copilot - {name}",
-                data={
-                    CONF_PROVIDER: "github_copilot",
-                    CONF_ACCOUNT_NAME: name,
-                },
-            )
-        schema = vol.Schema({
-            vol.Required(CONF_ACCOUNT_NAME): str,
-        })
-        return self.async_show_form(step_id="github_copilot", data_schema=schema, errors=errors)
 
     async def async_step_deepseek_api(
         self, user_input: dict[str, Any] | None = None
@@ -601,32 +465,6 @@ class AILimitsConfigFlow(ConfigFlow, domain=DOMAIN):
         })
         return self.async_show_form(step_id="openrouter_api", data_schema=schema, errors=errors)
 
-    async def async_step_perplexity_sub(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
-        if self._selected_entry_id is None and self._target_provider is None:
-            self._target_provider = "perplexity_sub"
-            cred_types = self._get_credential_types("perplexity_sub")
-            matching = self._get_matching_entries(cred_types)
-            if matching:
-                return await self.async_step_select_saved_login()
-
-        errors = {}
-        if user_input is not None:
-            name = user_input[CONF_ACCOUNT_NAME].strip()
-            await self.async_set_unique_id(f"perplexity_sub:{name.lower()}")
-            self._abort_if_unique_id_configured()
-            return self.async_create_entry(
-                title=f"Perplexity - {name}",
-                data={
-                    CONF_PROVIDER: "perplexity_sub",
-                    CONF_ACCOUNT_NAME: name,
-                },
-            )
-        schema = vol.Schema({
-            vol.Required(CONF_ACCOUNT_NAME): str,
-        })
-        return self.async_show_form(step_id="perplexity_sub", data_schema=schema, errors=errors)
 
     # --- Reauth -------------------------------------------------------
 

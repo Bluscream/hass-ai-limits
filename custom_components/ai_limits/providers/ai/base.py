@@ -12,6 +12,11 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from ...models import LimitsData
 
 
+def deobfuscate(b: list[int]) -> str:
+    """Decode an XOR-obfuscated byte list (embedded OAuth client constants)."""
+    return bytes([x ^ 0x42 for x in b]).decode("utf-8")
+
+
 class AuthError(Exception):
     """Raised when credentials are rejected."""
 
