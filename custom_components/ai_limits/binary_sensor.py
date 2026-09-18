@@ -42,7 +42,4 @@ class RateLimitedBinarySensor(AILimitsEntity, BinarySensorEntity):
         data = self.coordinator.data
         if data.status == STATUS_RATE_LIMITED:
             return True
-        return any(
-            win.status not in (None, "within_limit")
-            for win in data.windows.values()
-        )
+        return any(win.status not in (None, "within_limit") for win in data.windows.values())

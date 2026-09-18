@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import contextlib
 import logging
+
 from aiohttp import ClientError
 
 from ....models import LimitsData
@@ -53,20 +55,20 @@ class OpenRouterAPIProvider(AIProvider):
         # remaining spend limit (in USD)
         limit_remaining = key_data.get("limit_remaining")
         if limit_remaining is not None:
-            try:
+            with contextlib.suppress(ValueError, TypeError):
                 # If key has no limit set, it may be null/None or a large number
                 limits.credits_available = float(limit_remaining)
-            except (ValueError, TypeError):
-                pass
         else:
             # If there is no specific key limit, try using overall account credits
             try:
-                credits_resp = await self.session.get("https://openrouter.ai/api/v1/credits", headers=headers)
+                credits_resp = await self.session.get(
+                    "https://openrouter.ai/api/v1/credits", headers=headers
+                )
                 if credits_resp.status == 200:
                     credits_data = await credits_resp.json()
                     total_credits = credits_data.get("data", {}).get("total_credits", 0.0)
                     limits.credits_available = float(total_credits)
-            except Exception as err:
+            except ClientError as err:
                 _LOGGER.debug("Could not fetch overall OpenRouter credits: %s", err)
 
         return limits

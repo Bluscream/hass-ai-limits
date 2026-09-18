@@ -65,9 +65,7 @@ class GeminiUserTier:
         return cls(
             id=get(d, "id"),
             name=get(d, "name"),
-            availableCredits=[
-                Credit.from_dict(c) for c in (get(d, "availableCredits") or [])
-            ],
+            availableCredits=[Credit.from_dict(c) for c in (get(d, "availableCredits") or [])],
         )
 
     @property
@@ -89,9 +87,7 @@ class LoadCodeAssistResponse:
             paidTier=GeminiUserTier.from_dict(get(d, "paidTier")),
             allowedTiers=[
                 t
-                for t in (
-                    GeminiUserTier.from_dict(x) for x in (get(d, "allowedTiers") or [])
-                )
+                for t in (GeminiUserTier.from_dict(x) for x in (get(d, "allowedTiers") or []))
                 if t is not None
             ],
             cloudaicompanionProject=get(d, "cloudaicompanionProject"),

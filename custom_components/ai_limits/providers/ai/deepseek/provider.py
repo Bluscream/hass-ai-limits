@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import contextlib
 import logging
+
 from aiohttp import ClientError
 
 from ....models import LimitsData
@@ -53,9 +55,7 @@ class DeepSeekAPIProvider(AIProvider):
         balance_infos = data.get("balance_infos", [])
         if balance_infos:
             info = balance_infos[0]
-            try:
+            with contextlib.suppress(ValueError, TypeError):
                 limits.credits_available = float(info.get("total_balance", 0.0))
-            except (ValueError, TypeError):
-                pass
 
         return limits

@@ -43,11 +43,7 @@ class QuotaBucket:
         return self.modelId or self.tokenType or "unknown"
 
     def to_window_data(self) -> WindowData:
-        used = (
-            1.0 - self.remainingFraction
-            if self.remainingFraction is not None
-            else None
-        )
+        used = 1.0 - self.remainingFraction if self.remainingFraction is not None else None
         return WindowData(
             status="within_limit"
             if (self.remainingFraction is None or self.remainingFraction > 0)
@@ -64,9 +60,7 @@ class RetrieveUserQuotaResponse:
 
     @classmethod
     def from_dict(cls, d: dict) -> RetrieveUserQuotaResponse:
-        return cls(
-            buckets=[QuotaBucket.from_dict(b) for b in (get(d, "buckets") or [])]
-        )
+        return cls(buckets=[QuotaBucket.from_dict(b) for b in (get(d, "buckets") or [])])
 
     def to_windows(self) -> dict[str, WindowData]:
         windows: dict[str, WindowData] = {}

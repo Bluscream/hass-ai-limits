@@ -6,13 +6,13 @@ from .api_key import ApiKeyAuthProvider
 from .base import AuthProvider
 from .cookie import CookieAuthProvider
 from .devin import DevinAuthProvider
-from .oauth import OAuthProvider, OAuthError
+from .oauth import OAuthError, OAuthProvider
 
 __all__ = [
     "ApiKeyAuthProvider",
     "AuthProvider",
     "CookieAuthProvider",
     "DevinAuthProvider",
-    "OAuthProvider",
     "OAuthError",
+    "OAuthProvider",
 ]

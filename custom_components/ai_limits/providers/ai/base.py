@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, ClassVar
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -38,8 +38,8 @@ class AIProvider(ABC):
     # Whether to offer this provider in the add-integration menu. Deprecated
     # providers stay registered (so existing entries load) but hidden.
     menu_visible: bool = True
-    window_labels: dict[str, str] = {}
-    supported_auth: dict[str, dict[str, Any]] = {}
+    window_labels: ClassVar[dict[str, str]] = {}
+    supported_auth: ClassVar[dict[str, dict[str, Any]]] = {}
 
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
         self.hass = hass

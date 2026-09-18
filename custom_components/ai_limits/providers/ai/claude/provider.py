@@ -27,7 +27,6 @@ from ....const import (
     STATUS_OK,
     STATUS_RATE_LIMITED,
 )
-
 from ....models import LimitsData
 from ..base import AIProvider, AuthError, CannotConnect
 from .models import ClaudeOrganization, CompletionRequest, MessageLimit, UsageReport
@@ -42,7 +41,6 @@ DEFAULT_USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
 )
-
 
 
 def _find_dict(obj, key: str):
@@ -127,9 +125,7 @@ class ClaudeWebProvider(AIProvider):
 
     async def async_discover_org(self) -> ClaudeOrganization:
         try:
-            resp = await self.session.get(
-                f"{BASE_URL}/api/organizations", headers=self._headers()
-            )
+            resp = await self.session.get(f"{BASE_URL}/api/organizations", headers=self._headers())
         except ClientError as err:
             raise CannotConnect(str(err)) from err
         if resp.status in (401, 403):
@@ -173,9 +169,7 @@ class ClaudeWebProvider(AIProvider):
 
         data = await self._fetch_org_meta(org_uuid)
         if data.status == STATUS_ERROR:
-            _LOGGER.warning(
-                "Claude %s: org lookup failed (%s)", self.entry.title, data.error
-            )
+            _LOGGER.warning("Claude %s: org lookup failed (%s)", self.entry.title, data.error)
             return data
 
         await self._fetch_usage(org_uuid, data)
@@ -237,9 +231,7 @@ class ClaudeWebProvider(AIProvider):
             data.error = "invalid_auth"
             return
         if resp.status >= 400:
-            _LOGGER.warning(
-                "Claude %s: /usage HTTP %s", self.entry.title, resp.status
-            )
+            _LOGGER.warning("Claude %s: /usage HTTP %s", self.entry.title, resp.status)
             data.error = f"usage HTTP {resp.status}"
             return
         try:
@@ -268,10 +260,7 @@ class ClaudeWebProvider(AIProvider):
                 "assistant_message_uuid": str(uuid.uuid4()),
             },
         )
-        url = (
-            f"{BASE_URL}/api/organizations/{org_uuid}"
-            f"/chat_conversations/{conv_uuid}/completion"
-        )
+        url = f"{BASE_URL}/api/organizations/{org_uuid}/chat_conversations/{conv_uuid}/completion"
         try:
             resp = await self.session.post(
                 url, headers=self._headers(sse=True), json=request.to_dict()
@@ -301,10 +290,7 @@ class ClaudeWebProvider(AIProvider):
             await self._delete_conversation(org_uuid, conv_uuid)
 
     async def _delete_conversation(self, org_uuid: str, conv_uuid: str) -> None:
-        url = (
-            f"{BASE_URL}/api/organizations/{org_uuid}"
-            f"/chat_conversations/{conv_uuid}"
-        )
+        url = f"{BASE_URL}/api/organizations/{org_uuid}/chat_conversations/{conv_uuid}"
         try:
             await self.session.delete(url, headers=self._headers())
         except ClientError as err:

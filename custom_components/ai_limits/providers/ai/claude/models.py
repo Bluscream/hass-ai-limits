@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
-
 from typing import Any
 
 from ....models import WindowData, as_float, get, to_datetime
@@ -184,7 +183,5 @@ class CompletionRequest:
 
     def to_dict(self) -> dict:
         d = asdict(self)
-        d["create_conversation_params"] = CreateConversationParams(
-            model=self.model
-        ).to_dict()
+        d["create_conversation_params"] = CreateConversationParams(model=self.model).to_dict()
         return d

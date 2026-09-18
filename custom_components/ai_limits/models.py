@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 # ---------------------------------------------------------------------------
@@ -50,7 +50,7 @@ def _parse_iso(value: str) -> datetime | None:
         dt = datetime.fromisoformat(v)
     except ValueError:
         return None
-    return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+    return dt if dt.tzinfo else dt.replace(tzinfo=UTC)
 
 
 def to_datetime(value: Any) -> datetime | None:
@@ -62,7 +62,7 @@ def to_datetime(value: Any) -> datetime | None:
         if num > 1e12:  # milliseconds
             num /= 1000
         if num > 1_000_000_000:
-            return datetime.fromtimestamp(num, tz=timezone.utc)
+            return datetime.fromtimestamp(num, tz=UTC)
         return None
     if isinstance(value, str):
         num = as_float(value)

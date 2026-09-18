@@ -17,7 +17,7 @@ from ....const import (
     STATUS_RATE_LIMITED,
 )
 from ....models import LimitsData, OAuthTokens
-from ...auth import OAuthProvider, OAuthError
+from ...auth import OAuthError, OAuthProvider
 from ..base import AIProvider, deobfuscate
 from ..codeassist_models import (
     ClientMetadata,
@@ -32,9 +32,121 @@ CONF_REFRESH_TOKEN = "refresh_token"
 CONF_EXPIRES_AT = "expires_at"
 
 
-
-CLIENT_ID = deobfuscate([116, 122, 115, 112, 119, 119, 122, 114, 123, 113, 123, 119, 111, 45, 45, 122, 36, 54, 112, 45, 50, 48, 38, 48, 44, 50, 123, 39, 113, 35, 51, 36, 116, 35, 52, 113, 42, 47, 38, 43, 32, 115, 113, 119, 40, 108, 35, 50, 50, 49, 108, 37, 45, 45, 37, 46, 39, 55, 49, 39, 48, 33, 45, 44, 54, 39, 44, 54, 108, 33, 45, 47])
-CLIENT_SECRET = deobfuscate([5, 13, 1, 17, 18, 26, 111, 118, 55, 10, 37, 15, 18, 47, 111, 115, 45, 117, 17, 41, 111, 37, 39, 20, 116, 1, 55, 119, 33, 46, 26, 4, 49, 58, 46])
+CLIENT_ID = deobfuscate(
+    [
+        116,
+        122,
+        115,
+        112,
+        119,
+        119,
+        122,
+        114,
+        123,
+        113,
+        123,
+        119,
+        111,
+        45,
+        45,
+        122,
+        36,
+        54,
+        112,
+        45,
+        50,
+        48,
+        38,
+        48,
+        44,
+        50,
+        123,
+        39,
+        113,
+        35,
+        51,
+        36,
+        116,
+        35,
+        52,
+        113,
+        42,
+        47,
+        38,
+        43,
+        32,
+        115,
+        113,
+        119,
+        40,
+        108,
+        35,
+        50,
+        50,
+        49,
+        108,
+        37,
+        45,
+        45,
+        37,
+        46,
+        39,
+        55,
+        49,
+        39,
+        48,
+        33,
+        45,
+        44,
+        54,
+        39,
+        44,
+        54,
+        108,
+        33,
+        45,
+        47,
+    ]
+)
+CLIENT_SECRET = deobfuscate(
+    [
+        5,
+        13,
+        1,
+        17,
+        18,
+        26,
+        111,
+        118,
+        55,
+        10,
+        37,
+        15,
+        18,
+        47,
+        111,
+        115,
+        45,
+        117,
+        17,
+        41,
+        111,
+        37,
+        39,
+        20,
+        116,
+        1,
+        55,
+        119,
+        33,
+        46,
+        26,
+        4,
+        49,
+        58,
+        46,
+    ]
+)
 
 CLIENT_METADATA = {"ideType": "GEMINI_CLI", "pluginType": "GEMINI"}
 
@@ -59,11 +171,11 @@ class GeminiProvider(AIProvider):
             "client_id": CLIENT_ID,
             "client_secret": CLIENT_SECRET,
             "redirect_uri": "https://codeassist.google.com/authcode",
-            "scopes": " ".join([
-                "https://www.googleapis.com/auth/cloud-platform",
-                "https://www.googleapis.com/auth/userinfo.email",
-                "https://www.googleapis.com/auth/userinfo.profile",
-            ]),
+            "scopes": (
+                "https://www.googleapis.com/auth/cloud-platform "
+                "https://www.googleapis.com/auth/userinfo.email "
+                "https://www.googleapis.com/auth/userinfo.profile"
+            ),
             "use_pkce": True,
         }
     }
@@ -84,18 +196,14 @@ class GeminiProvider(AIProvider):
         auth_config = self.supported_auth["google_oauth"]
         auth_provider = OAuthProvider(self.hass, auth_config)
         tokens = await auth_provider.async_refresh(d[CONF_REFRESH_TOKEN])
-        self.hass.config_entries.async_update_entry(
-            self.entry, data={**d, **tokens.to_storage()}
-        )
+        self.hass.config_entries.async_update_entry(self.entry, data={**d, **tokens.to_storage()})
         return tokens.access_token
 
     async def async_fetch(self) -> LimitsData:
         try:
             token = await self._token()
         except OAuthError as err:
-            _LOGGER.error(
-                "Gemini token refresh failed for %s: %s", self.entry.title, err
-            )
+            _LOGGER.error("Gemini token refresh failed for %s: %s", self.entry.title, err)
             return LimitsData(status=STATUS_ERROR, error=f"refresh: {err}")
 
         headers = {
@@ -117,9 +225,7 @@ class GeminiProvider(AIProvider):
         return data
 
     async def _load_tier(self, headers: dict, data: LimitsData) -> None:
-        request = LoadCodeAssistRequest(
-            metadata=ClientMetadata(CLIENT_METADATA)
-        )
+        request = LoadCodeAssistRequest(metadata=ClientMetadata(CLIENT_METADATA))
         try:
             resp = await self.session.post(
                 f"{CLOUDCODE}:loadCodeAssist", headers=headers, json=request.to_dict()
@@ -141,16 +247,12 @@ class GeminiProvider(AIProvider):
             data.error = "invalid_auth"
             return
         if resp.status >= 400:
-            _LOGGER.warning(
-                "Gemini loadCodeAssist HTTP %s for %s", resp.status, self.entry.title
-            )
+            _LOGGER.warning("Gemini loadCodeAssist HTTP %s for %s", resp.status, self.entry.title)
             data.status = STATUS_ERROR
             data.error = f"loadCodeAssist HTTP {resp.status}"
             return
         try:
-            parsed = LoadCodeAssistResponse.from_dict(
-                await resp.json(content_type=None)
-            )
+            parsed = LoadCodeAssistResponse.from_dict(await resp.json(content_type=None))
         except (ClientError, ValueError):
             return
         apply_credits(parsed, data)
@@ -166,9 +268,7 @@ class GeminiProvider(AIProvider):
             )
 
     async def _load_quota(self, headers: dict, data: LimitsData) -> None:
-        request = RetrieveUserQuotaRequest(
-            project=self.entry.data.get(CONF_GCP_PROJECT)
-        )
+        request = RetrieveUserQuotaRequest(project=self.entry.data.get(CONF_GCP_PROJECT))
         try:
             resp = await self.session.post(
                 f"{CLOUDCODE}:retrieveUserQuota",
@@ -185,9 +285,7 @@ class GeminiProvider(AIProvider):
             data.error = f"retrieveUserQuota HTTP {resp.status}"
             return
         try:
-            parsed = RetrieveUserQuotaResponse.from_dict(
-                await resp.json(content_type=None)
-            )
+            parsed = RetrieveUserQuotaResponse.from_dict(await resp.json(content_type=None))
         except (ClientError, ValueError):
             return
         data.windows.update(parsed.to_windows())

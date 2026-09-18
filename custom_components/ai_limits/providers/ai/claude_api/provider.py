@@ -5,8 +5,8 @@ from __future__ import annotations
 import logging
 from datetime import timedelta
 from urllib.parse import urlencode
-from aiohttp import ClientError
 
+from aiohttp import ClientError
 from homeassistant.util import dt as dt_util
 
 from ....models import LimitsData

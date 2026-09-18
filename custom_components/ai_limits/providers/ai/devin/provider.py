@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import logging
 
 from aiohttp import ClientError
@@ -47,7 +48,7 @@ class DevinProvider(AIProvider):
             "scopes": "openid email profile",
             "redirect_uri": "https://app.devin.ai/auth/callback",
             "use_pkce": True,
-        }
+        },
     }
     window_labels = {
         "daily": "Daily quota",
@@ -79,7 +80,7 @@ class DevinProvider(AIProvider):
             resp = await self.session.get(quota_url, headers=headers)
         except ClientError as err:
             _LOGGER.error("Devin quota request failed for %s: %s", self._name, err)
-            raise CannotConnect(f"Connection failed: {err}")
+            raise CannotConnect(f"Connection failed: {err}") from err
 
         if resp.status in (401, 403):
             raise AuthError("Invalid auth token or organization ID")
@@ -101,14 +102,12 @@ class DevinProvider(AIProvider):
             resp_status = await self.session.get(status_url, headers=headers)
         except ClientError as err:
             _LOGGER.error("Devin status request failed for %s: %s", self._name, err)
-            raise CannotConnect(f"Connection failed: {err}")
+            raise CannotConnect(f"Connection failed: {err}") from err
 
         billing_status = {}
         if resp_status.status == 200:
-            try:
+            with contextlib.suppress(ClientError, ValueError):
                 billing_status = await resp_status.json()
-            except (ClientError, ValueError):
-                pass
 
         # Populate plan & credits details
         data.plan = billing_status.get("plan_slug", "free")
@@ -158,9 +157,7 @@ class DevinProvider(AIProvider):
         return data
 
 
-async def async_validate(
-    hass: HomeAssistant, token: str, org_id: str
-) -> None:
+async def async_validate(hass: HomeAssistant, token: str, org_id: str) -> None:
     """Config-time probe. Raises AuthError / CannotConnect on failure."""
     session = async_get_clientsession(hass)
     headers = {

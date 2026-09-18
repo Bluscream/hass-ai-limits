@@ -54,9 +54,7 @@ class FetchAvailableModelsResponse:
         raw_models = get(d, "models") or {}
         return cls(
             models=[
-                ModelQuota.from_dict(mid, m)
-                for mid, m in raw_models.items()
-                if isinstance(m, dict)
+                ModelQuota.from_dict(mid, m) for mid, m in raw_models.items() if isinstance(m, dict)
             ]
         )
 
@@ -72,9 +70,7 @@ class FetchAvailableModelsResponse:
         for group, members in groups.items():
             worst = min(
                 members,
-                key=lambda x: x.remaining_fraction
-                if x.remaining_fraction is not None
-                else 0.0,
+                key=lambda x: x.remaining_fraction if x.remaining_fraction is not None else 0.0,
             )
             frac = worst.remaining_fraction
             windows[slug(group)] = WindowData(
@@ -89,8 +85,4 @@ class FetchAvailableModelsResponse:
 
 def onboard_project(payload: dict) -> str | None:
     """Pull the cloudaicompanionProject id out of an onboardUser response."""
-    return (
-        (get(payload, "response") or {})
-        .get("cloudaicompanionProject", {})
-        .get("id")
-    )
+    return (get(payload, "response") or {}).get("cloudaicompanionProject", {}).get("id")

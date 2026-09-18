@@ -36,15 +36,13 @@ from .const import (
     DOMAIN,
     MIN_SCAN_INTERVAL,
 )
-from .providers import REGISTRY, menu_options, AuthError, CannotConnect
-from .providers.auth import OAuthProvider, OAuthError
+from .providers import REGISTRY, AuthError, CannotConnect, menu_options
 from .providers.ai.claude import async_validate as validate_claude
 from .providers.ai.claude.provider import DEFAULT_USER_AGENT
 from .providers.ai.devin import async_validate as validate_devin
+from .providers.auth import OAuthError, OAuthProvider
 
-_COOKIE_SELECTOR = TextSelector(
-    TextSelectorConfig(type=TextSelectorType.PASSWORD, multiline=True)
-)
+_COOKIE_SELECTOR = TextSelector(TextSelectorConfig(type=TextSelectorType.PASSWORD, multiline=True))
 
 
 class AILimitsConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -80,9 +78,7 @@ class AILimitsConfigFlow(ConfigFlow, domain=DOMAIN):
                 matching.append(entry)
         return matching
 
-    async def async_step_user(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
+    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         # Reset provider context on menu start
         self._target_provider = None
         self._selected_entry_id = None
@@ -116,15 +112,9 @@ class AILimitsConfigFlow(ConfigFlow, domain=DOMAIN):
             options[entry.entry_id] = f"{entry.data.get(CONF_ACCOUNT_NAME)} ({lbl})"
         options["new_login"] = "Log in with new credentials"
 
-        schema = vol.Schema({
-            vol.Required("saved_login", default="new_login"): vol.In(options)
-        })
+        schema = vol.Schema({vol.Required("saved_login", default="new_login"): vol.In(options)})
 
-        return self.async_show_form(
-            step_id="select_saved_login",
-            data_schema=schema,
-            errors=errors
-        )
+        return self.async_show_form(step_id="select_saved_login", data_schema=schema, errors=errors)
 
     async def async_step_reused_name(
         self, user_input: dict[str, Any] | None = None
@@ -144,14 +134,8 @@ class AILimitsConfigFlow(ConfigFlow, domain=DOMAIN):
                 data=self._reused_data,
             )
 
-        schema = vol.Schema({
-            vol.Required(CONF_ACCOUNT_NAME): str
-        })
-        return self.async_show_form(
-            step_id="reused_name",
-            data_schema=schema,
-            errors=errors
-        )
+        schema = vol.Schema({vol.Required(CONF_ACCOUNT_NAME): str})
+        return self.async_show_form(step_id="reused_name", data_schema=schema, errors=errors)
 
     # --- Claude web session -------------------------------------------
 
@@ -203,15 +187,11 @@ class AILimitsConfigFlow(ConfigFlow, domain=DOMAIN):
                 vol.Optional("user_agent", default=DEFAULT_USER_AGENT): str,
             }
         )
-        return self.async_show_form(
-            step_id="claude_web", data_schema=schema, errors=errors
-        )
+        return self.async_show_form(step_id="claude_web", data_schema=schema, errors=errors)
 
     # --- Devin --------------------------------------------------------
 
-    async def async_step_devin(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
+    async def async_step_devin(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         if self._selected_entry_id is None and self._target_provider is None:
             self._target_provider = "devin"
             cred_types = self._get_credential_types("devin")
@@ -225,7 +205,7 @@ class AILimitsConfigFlow(ConfigFlow, domain=DOMAIN):
                 "devin_google_oauth": "Log in via Google",
                 "devin_github_oauth": "Log in via GitHub",
                 "devin_token": "Log in via Direct Bearer Token",
-            }
+            },
         )
 
     async def async_step_devin_google_oauth(
@@ -280,9 +260,7 @@ class AILimitsConfigFlow(ConfigFlow, domain=DOMAIN):
                 vol.Required("devin_org"): str,
             }
         )
-        return self.async_show_form(
-            step_id="devin_token", data_schema=schema, errors=errors
-        )
+        return self.async_show_form(step_id="devin_token", data_schema=schema, errors=errors)
 
     # --- OAuth providers (paste flow) ---------------------------------
 
@@ -321,9 +299,7 @@ class AILimitsConfigFlow(ConfigFlow, domain=DOMAIN):
                 errors["base"] = "oauth_failed"
             else:
                 try:
-                    tokens = await auth_provider.async_exchange_code(
-                        code, self._verifier
-                    )
+                    tokens = await auth_provider.async_exchange_code(code, self._verifier)
                 except OAuthError:
                     errors["base"] = "oauth_failed"
                 else:
@@ -393,17 +369,13 @@ class AILimitsConfigFlow(ConfigFlow, domain=DOMAIN):
                     "api_key": api_key,
                 },
             )
-        schema = vol.Schema({
-            vol.Required(CONF_ACCOUNT_NAME): str,
-            vol.Required("api_key"): str,
-        })
+        schema = vol.Schema(
+            {
+                vol.Required(CONF_ACCOUNT_NAME): str,
+                vol.Required("api_key"): str,
+            }
+        )
         return self.async_show_form(step_id="claude_api", data_schema=schema, errors=errors)
-
-
-
-
-
-
 
     async def async_step_deepseek_api(
         self, user_input: dict[str, Any] | None = None
@@ -429,10 +401,12 @@ class AILimitsConfigFlow(ConfigFlow, domain=DOMAIN):
                     "api_key": api_key,
                 },
             )
-        schema = vol.Schema({
-            vol.Required(CONF_ACCOUNT_NAME): str,
-            vol.Required("api_key"): str,
-        })
+        schema = vol.Schema(
+            {
+                vol.Required(CONF_ACCOUNT_NAME): str,
+                vol.Required("api_key"): str,
+            }
+        )
         return self.async_show_form(step_id="deepseek_api", data_schema=schema, errors=errors)
 
     async def async_step_openrouter_api(
@@ -459,18 +433,17 @@ class AILimitsConfigFlow(ConfigFlow, domain=DOMAIN):
                     "api_key": api_key,
                 },
             )
-        schema = vol.Schema({
-            vol.Required(CONF_ACCOUNT_NAME): str,
-            vol.Required("api_key"): str,
-        })
+        schema = vol.Schema(
+            {
+                vol.Required(CONF_ACCOUNT_NAME): str,
+                vol.Required("api_key"): str,
+            }
+        )
         return self.async_show_form(step_id="openrouter_api", data_schema=schema, errors=errors)
-
 
     # --- Reauth -------------------------------------------------------
 
-    async def async_step_reauth(
-        self, entry_data: dict[str, Any]
-    ) -> ConfigFlowResult:
+    async def async_step_reauth(self, entry_data: dict[str, Any]) -> ConfigFlowResult:
         return await self.async_step_reauth_confirm()
 
     async def async_step_reauth_confirm(
@@ -488,9 +461,7 @@ class AILimitsConfigFlow(ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             cookie = user_input["cookie"].strip()
             try:
-                await validate_claude(
-                    self.hass, cookie, entry.data.get("user_agent")
-                )
+                await validate_claude(self.hass, cookie, entry.data.get("user_agent"))
             except AuthError:
                 errors["base"] = "invalid_auth"
             except CannotConnect:
@@ -517,9 +488,7 @@ class AILimitsOptionsFlow(OptionsFlow):
 
     _DATA_KEYS = (CONF_ACCOUNT_NAME, "cookie", "user_agent")
 
-    async def async_step_init(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
+    async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         entry = self.config_entry
         provider = entry.data[CONF_PROVIDER]
 
@@ -542,9 +511,7 @@ class AILimitsOptionsFlow(OptionsFlow):
             self.hass.config_entries.async_update_entry(
                 entry, data=new_data, title=titles.get(provider, entry.title)
             )
-            options = {
-                k: v for k, v in user_input.items() if k not in self._DATA_KEYS
-            }
+            options = {k: v for k, v in user_input.items() if k not in self._DATA_KEYS}
             return self.async_create_entry(data=options)
 
         data = entry.data
@@ -564,16 +531,12 @@ class AILimitsOptionsFlow(OptionsFlow):
             )
         }
         fields: dict[Any, Any] = {
-            vol.Required(
-                CONF_ACCOUNT_NAME, default=data.get(CONF_ACCOUNT_NAME, "")
-            ): str,
+            vol.Required(CONF_ACCOUNT_NAME, default=data.get(CONF_ACCOUNT_NAME, "")): str,
         }
         if provider == "claude_web":
             fields[vol.Optional("cookie")] = _COOKIE_SELECTOR
             fields[
-                vol.Optional(
-                    "user_agent", default=data.get("user_agent", DEFAULT_USER_AGENT)
-                )
+                vol.Optional("user_agent", default=data.get("user_agent", DEFAULT_USER_AGENT))
             ] = str
             fields[
                 vol.Required(

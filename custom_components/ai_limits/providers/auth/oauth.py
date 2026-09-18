@@ -24,7 +24,7 @@ class OAuthError(Exception):
 
 
 class OAuthProvider(AuthProvider):
-    """AuthProvider that handles OAuth token lifetime, refresh, and PKCE exchange for any provider."""
+    """AuthProvider that handles OAuth token lifetime, refresh, and PKCE exchange."""
 
     auth_type_id = "oauth"
 

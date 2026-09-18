@@ -18,7 +18,7 @@ from ....const import (
     STATUS_RATE_LIMITED,
 )
 from ....models import LimitsData, OAuthTokens
-from ...auth import OAuthProvider, OAuthError
+from ...auth import OAuthError, OAuthProvider
 from ..base import AIProvider, deobfuscate
 from ..codeassist_models import LoadCodeAssistResponse, apply_credits
 from .models import FetchAvailableModelsResponse, onboard_project
@@ -28,8 +28,122 @@ CONF_REFRESH_TOKEN = "refresh_token"
 CONF_EXPIRES_AT = "expires_at"
 
 
-CLIENT_ID = deobfuscate([115, 114, 117, 115, 114, 114, 116, 114, 116, 114, 119, 123, 115, 111, 54, 47, 42, 49, 49, 43, 44, 112, 42, 112, 115, 46, 33, 48, 39, 112, 113, 119, 52, 54, 45, 46, 45, 40, 42, 118, 37, 118, 114, 113, 39, 50, 108, 35, 50, 50, 49, 108, 37, 45, 45, 37, 46, 39, 55, 49, 39, 48, 33, 45, 44, 54, 39, 44, 54, 108, 33, 45, 47])
-CLIENT_SECRET = deobfuscate([5, 13, 1, 17, 18, 26, 111, 9, 119, 122, 4, 21, 16, 118, 122, 116, 14, 38, 14, 8, 115, 47, 14, 0, 122, 49, 26, 1, 118, 56, 116, 51, 6, 3, 36])
+CLIENT_ID = deobfuscate(
+    [
+        115,
+        114,
+        117,
+        115,
+        114,
+        114,
+        116,
+        114,
+        116,
+        114,
+        119,
+        123,
+        115,
+        111,
+        54,
+        47,
+        42,
+        49,
+        49,
+        43,
+        44,
+        112,
+        42,
+        112,
+        115,
+        46,
+        33,
+        48,
+        39,
+        112,
+        113,
+        119,
+        52,
+        54,
+        45,
+        46,
+        45,
+        40,
+        42,
+        118,
+        37,
+        118,
+        114,
+        113,
+        39,
+        50,
+        108,
+        35,
+        50,
+        50,
+        49,
+        108,
+        37,
+        45,
+        45,
+        37,
+        46,
+        39,
+        55,
+        49,
+        39,
+        48,
+        33,
+        45,
+        44,
+        54,
+        39,
+        44,
+        54,
+        108,
+        33,
+        45,
+        47,
+    ]
+)
+CLIENT_SECRET = deobfuscate(
+    [
+        5,
+        13,
+        1,
+        17,
+        18,
+        26,
+        111,
+        9,
+        119,
+        122,
+        4,
+        21,
+        16,
+        118,
+        122,
+        116,
+        14,
+        38,
+        14,
+        8,
+        115,
+        47,
+        14,
+        0,
+        122,
+        49,
+        26,
+        1,
+        118,
+        56,
+        116,
+        51,
+        6,
+        3,
+        36,
+    ]
+)
 
 CLIENT_METADATA = {
     "ide_type": "ANTIGRAVITY",
@@ -61,13 +175,15 @@ class AntigravityProvider(AIProvider):
             "client_id": CLIENT_ID,
             "client_secret": CLIENT_SECRET,
             "redirect_uri": "http://localhost:8765/oauth-callback",
-            "scopes": " ".join([
-                "https://www.googleapis.com/auth/cloud-platform",
-                "https://www.googleapis.com/auth/userinfo.email",
-                "https://www.googleapis.com/auth/userinfo.profile",
-                "https://www.googleapis.com/auth/cclog",
-                "https://www.googleapis.com/auth/experimentsandconfigs",
-            ]),
+            "scopes": " ".join(
+                [
+                    "https://www.googleapis.com/auth/cloud-platform",
+                    "https://www.googleapis.com/auth/userinfo.email",
+                    "https://www.googleapis.com/auth/userinfo.profile",
+                    "https://www.googleapis.com/auth/cclog",
+                    "https://www.googleapis.com/auth/experimentsandconfigs",
+                ]
+            ),
             "use_pkce": False,
         }
     }
@@ -92,9 +208,7 @@ class AntigravityProvider(AIProvider):
         auth_config = self.supported_auth["google_oauth"]
         auth_provider = OAuthProvider(self.hass, auth_config)
         tokens = await auth_provider.async_refresh(d[CONF_REFRESH_TOKEN])
-        self.hass.config_entries.async_update_entry(
-            self.entry, data={**d, **tokens.to_storage()}
-        )
+        self.hass.config_entries.async_update_entry(self.entry, data={**d, **tokens.to_storage()})
         return tokens.access_token
 
     async def async_fetch(self) -> LimitsData:
@@ -131,16 +245,12 @@ class AntigravityProvider(AIProvider):
     async def _onboard(self, headers: dict) -> str | None:
         body = {"tier_id": "free-tier", "metadata": CLIENT_METADATA}
         try:
-            resp = await self.session.post(
-                f"{DAILY}:onboardUser", headers=headers, json=body
-            )
+            resp = await self.session.post(f"{DAILY}:onboardUser", headers=headers, json=body)
         except ClientError as err:
             _LOGGER.debug("onboardUser request failed for %s: %s", self._name, err)
             return None
         if resp.status >= 400:
-            _LOGGER.debug(
-                "onboardUser HTTP %s for %s", resp.status, self._name
-            )
+            _LOGGER.debug("onboardUser HTTP %s for %s", resp.status, self._name)
             return None
         try:
             return onboard_project(await resp.json(content_type=None))
@@ -167,16 +277,12 @@ class AntigravityProvider(AIProvider):
             data.error = "invalid_auth"
             return None
         if resp.status >= 400:
-            _LOGGER.warning(
-                "Antigravity loadCodeAssist HTTP %s for %s", resp.status, self._name
-            )
+            _LOGGER.warning("Antigravity loadCodeAssist HTTP %s for %s", resp.status, self._name)
             data.status = STATUS_ERROR
             data.error = f"loadCodeAssist HTTP {resp.status}"
             return None
         try:
-            parsed = LoadCodeAssistResponse.from_dict(
-                await resp.json(content_type=None)
-            )
+            parsed = LoadCodeAssistResponse.from_dict(await resp.json(content_type=None))
         except (ClientError, ValueError):
             return None
         apply_credits(parsed, data)
@@ -189,9 +295,7 @@ class AntigravityProvider(AIProvider):
         }
         return parsed.cloudaicompanionProject
 
-    async def _load_models(
-        self, headers: dict, data: LimitsData, project: str
-    ) -> None:
+    async def _load_models(self, headers: dict, data: LimitsData, project: str) -> None:
         try:
             resp = await self.session.post(
                 f"{DAILY}:fetchAvailableModels",
@@ -215,9 +319,7 @@ class AntigravityProvider(AIProvider):
             data.error = f"fetchAvailableModels HTTP {resp.status}"
             return
         try:
-            parsed = FetchAvailableModelsResponse.from_dict(
-                await resp.json(content_type=None)
-            )
+            parsed = FetchAvailableModelsResponse.from_dict(await resp.json(content_type=None))
         except (ClientError, ValueError):
             return
         data.windows.update(parsed.to_windows())

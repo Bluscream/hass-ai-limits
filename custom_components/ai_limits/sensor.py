@@ -155,13 +155,9 @@ _CREDITS_DESCRIPTION = AILimitsSensorDescription(
     state_class=SensorStateClass.MEASUREMENT,
     native_unit_of_measurement="credits",
     suggested_display_precision=0,
-    value_fn=lambda d: (
-        int(d.credits_available) if d.credits_available is not None else None
-    ),
+    value_fn=lambda d: int(d.credits_available) if d.credits_available is not None else None,
     attr_fn=lambda d: {
-        "minimum_for_usage": (
-            int(d.credits_min) if d.credits_min is not None else None
-        )
+        "minimum_for_usage": (int(d.credits_min) if d.credits_min is not None else None)
     },
 )
 
